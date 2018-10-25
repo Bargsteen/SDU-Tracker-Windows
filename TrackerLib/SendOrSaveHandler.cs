@@ -38,13 +38,11 @@ namespace TrackerLib
 
       for (int i = 0; i < limitOfEach && i < appUsagesCount; i++)
       {
-        Console.WriteLine(appUsagesCount);
         SendOrSaveUsage(appUsages.First(), credentials, true);
       }
 
       for (int i = 0; i < limitOfEach && i < deviceUsagesCount; i++)
       {
-        Console.WriteLine(deviceUsagesCount);
         SendOrSaveUsage(deviceUsages.First(), credentials, true);
       }
     }
