@@ -4,18 +4,19 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Http.Headers;
 
 namespace TrackerLib
 {
   public class Requests
   {
-    private static readonly HttpClient client = new HttpClient(new LoggingHandler(new HttpClientHandler()));
+    private static readonly HttpClient client = new HttpClient();
     private const string baseUrl = "https://screens.sdu.dk/v1/";
-    public static void SendUsageAsync(Usage usage, Credentials credentials)
+    public static void SendUsageAsync(Usage usage, Credentials credentials, Action onSuccess, Action onError)
     {
       // Set url dependent on usage type
       string urlEnding = "";
-      switch(usage)
+      switch (usage)
       {
         case AppUsage _:
           urlEnding = "app_usages";
@@ -35,10 +36,28 @@ namespace TrackerLib
                               .ToBase64String(Encoding.GetEncoding("ISO-8859-1")
                               .GetBytes($"{credentials.Username}:{credentials.Password}"));
 
-      client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", encodedCredentials);
+      client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Basic", encodedCredentials);
+
 
       // Request
-      var response = client.PostAsync(url, content).Result;
+      HttpResponseMessage response = null;
+      try
+      {
+        response = client.PostAsync(url, content).Result;
+      }
+      catch { } // Not really interested in the Error. Just needed to avoid runtime errors.
+      finally
+      {
+        if (response?.StatusCode == HttpStatusCode.OK)
+        {
+          onSuccess();
+        }
+        else
+        {
+          onError();
+        }
+      }
     }
   }
 
