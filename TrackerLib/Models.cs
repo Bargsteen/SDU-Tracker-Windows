@@ -1,63 +1,80 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Realms;
 
 namespace TrackerLib
 {
-  public abstract class Usage
+  [JsonObject(MemberSerialization.OptIn)]
+  public interface Usage
   {
-    public Usage(string participantIdentifier,
-    string deviceModelName, int userCount)
+    [JsonProperty("participant_identifier")]
+    string ParticipantIdentifier { get; set; }
+
+    [JsonProperty("device_model_name")]
+    string DeviceModelName { get; set; }
+
+    [JsonProperty("user_count")]
+    int UserCount { get; set; }
+
+    string UsageIdentifier {get;}
+  }
+
+  public class DeviceUsage : RealmObject, Usage
+  {
+
+    public DeviceUsage(){}
+    public DeviceUsage(string participantIdentifier, string deviceModelName,
+                       DateTimeOffset timeStamp, int userCount, EventType eventType)
     {
       ParticipantIdentifier = participantIdentifier;
       DeviceModelName = deviceModelName;
+      TimeStamp = timeStamp;
       UserCount = userCount;
+
+      EventType = eventType.GetHashCode();
     }
-
-    [JsonProperty("participant_identifier")]
-    public string ParticipantIdentifier { get; set; }
-
-    [JsonProperty("device_model_name")]
-    public string DeviceModelName { get; set; }
-
-    [JsonProperty("user_count")]
-    public int UserCount { get; set; }    
-  }
-
-  public class DeviceUsage : Usage
-  {
-    public DeviceUsage(string participantIdentifier, string deviceModelName,
-    int userCount, DateTime timeStamp, EventType eventType)
-    : base(participantIdentifier, deviceModelName, userCount)
-    {
-      EventType = eventType;
-    }
+    public string ParticipantIdentifier { get; set;}
+    public string DeviceModelName { get; set;}
+    public int UserCount { get; set;}
 
     [JsonProperty("timestamp")]
-    public DateTime TimeStamp { get; set; }
+    public DateTimeOffset TimeStamp { get; set;}
 
     [JsonProperty("event_type")]
-    public EventType EventType { get; set; }
+    public int EventType { get; set; }
+
+    public string UsageIdentifier => $"device_{ParticipantIdentifier}_{TimeStamp}_{EventType}";
   }
 
-  public class AppUsage : Usage
+  public class AppUsage : RealmObject, Usage
   {
-    public AppUsage(string participantIdentifier,
-    string deviceModelName, int userCount, DateTime date, string package, int duration)
-    : base(participantIdentifier, deviceModelName, userCount)
+    public AppUsage() {}
+    public AppUsage(string participantIdentifier, string deviceModelName,
+                    DateTimeOffset timeStamp, int userCount, string package, 
+                    int duration)
     {
-      Date = date;
+      ParticipantIdentifier = participantIdentifier;
+      DeviceModelName = deviceModelName;
+      TimeStamp = timeStamp;
+      UserCount = userCount;
+
       Package = package;
       Duration = duration;
     }
+    public string ParticipantIdentifier { get; set;}
+    public string DeviceModelName { get; set;}
+    public int UserCount { get; set;}
 
     [JsonProperty("date")]
-    public DateTime Date { get; set; }
+    public DateTimeOffset TimeStamp { get; set;}
 
     [JsonProperty("package")]
     public string Package { get; set; }
 
     [JsonProperty("duration")]
     public int Duration { get; set; }
+
+    public string UsageIdentifier => $"app_{ParticipantIdentifier}_{TimeStamp}_{Package}";
   }
 
   public enum EventType
