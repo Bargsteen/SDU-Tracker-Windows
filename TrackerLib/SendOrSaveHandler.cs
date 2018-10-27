@@ -15,13 +15,21 @@ namespace TrackerLib
 
       if (fromPersistence)
       {
-        onSuccess = () => Persistence.DeleteUsage(usage);
+        onSuccess = () =>
+        {
+          Persistence.DeleteUsage(usage);
+          Logging.LogUsage(usage, UsageLogType.SentFromPersistence);
+        };
         onError = () => { }; // Let it stay in persistence.
       }
       else
       {
-        onSuccess = () => { }; // Nothing left to do.
-        onError = () => Persistence.SaveUsage(usage);
+        onSuccess = () => Logging.LogUsage(usage, UsageLogType.SentDirectly);
+        onError = () =>
+        {
+          Persistence.SaveUsage(usage);
+          Logging.LogUsage(usage, UsageLogType.Saved);
+        };
       }
 
       Requests.SendUsageAsync(usage, credentials, onSuccess, onError);
@@ -32,7 +40,7 @@ namespace TrackerLib
     {
       var appUsages = Persistence.FetchAppUsages();
       var deviceUsages = Persistence.FetchDeviceUsages();
-      
+
       int appUsagesCount = appUsages.Count();
       int deviceUsagesCount = deviceUsages.Count();
 

@@ -16,13 +16,13 @@ namespace TrackerLib
     [JsonProperty("user_count")]
     int UserCount { get; set; }
 
-    string UsageIdentifier {get;}
+    string UsageIdentifier { get; }
   }
 
   public class DeviceUsage : RealmObject, Usage
   {
 
-    public DeviceUsage(){}
+    public DeviceUsage() { }
     public DeviceUsage(string participantIdentifier, string deviceModelName,
                        DateTimeOffset timeStamp, int userCount, EventType eventType)
     {
@@ -33,12 +33,12 @@ namespace TrackerLib
 
       EventType = eventType.GetHashCode();
     }
-    public string ParticipantIdentifier { get; set;}
-    public string DeviceModelName { get; set;}
-    public int UserCount { get; set;}
+    public string ParticipantIdentifier { get; set; }
+    public string DeviceModelName { get; set; }
+    public int UserCount { get; set; }
 
     [JsonProperty("timestamp")]
-    public DateTimeOffset TimeStamp { get; set;}
+    public DateTimeOffset TimeStamp { get; set; }
 
     [JsonProperty("event_type")]
     public int EventType { get; set; }
@@ -48,9 +48,9 @@ namespace TrackerLib
 
   public class AppUsage : RealmObject, Usage
   {
-    public AppUsage() {}
+    public AppUsage() { }
     public AppUsage(string participantIdentifier, string deviceModelName,
-                    DateTimeOffset timeStamp, int userCount, string package, 
+                    DateTimeOffset timeStamp, int userCount, string package,
                     int duration)
     {
       ParticipantIdentifier = participantIdentifier;
@@ -61,12 +61,12 @@ namespace TrackerLib
       Package = package;
       Duration = duration;
     }
-    public string ParticipantIdentifier { get; set;}
-    public string DeviceModelName { get; set;}
-    public int UserCount { get; set;}
+    public string ParticipantIdentifier { get; set; }
+    public string DeviceModelName { get; set; }
+    public int UserCount { get; set; }
 
     [JsonProperty("date")]
-    public DateTimeOffset TimeStamp { get; set;}
+    public DateTimeOffset TimeStamp { get; set; }
 
     [JsonProperty("package")]
     public string Package { get; set; }
@@ -83,11 +83,24 @@ namespace TrackerLib
     Ended = 0
   }
 
-  public static class UsageExtensions
+  public static class Extensions
   {
     public static string ToJson(this Usage usage)
     {
       return JsonConvert.SerializeObject(usage);
+    }
+
+    public static string EventTypeToString(this int eventType)
+    {
+      switch (eventType)
+      {
+        case 1:
+          return "Started";
+        case 0:
+          return "Ended";
+        default:
+          return "";
+      }
     }
   }
 }

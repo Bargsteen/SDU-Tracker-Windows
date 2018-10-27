@@ -20,6 +20,38 @@ namespace TrackerLib
     public static void LogDebug(string msg) => _log.Debug(msg);
     public static void LogError(string msg) => _log.Error(msg);
     public static void LogFatal(string msg) => _log.Fatal(msg);
-   
+
+
+    public static void LogUsage<T>(T usage, UsageLogType usageLogType) where T : Usage
+    {
+      string logMsg = "";
+
+      switch (usageLogType)
+      {
+        case UsageLogType.SentDirectly:
+          logMsg += "Sent directly: ";
+          break;
+        case UsageLogType.SentFromPersistence:
+          logMsg += "Sent from storage: ";
+          break;
+        case UsageLogType.Saved:
+          logMsg += "Saved: ";
+          break;
+      }
+
+      switch (usage)
+      {
+        case DeviceUsage deviceUsage:
+          logMsg += $"[DEVICE] {deviceUsage.EventType.EventTypeToString()}";
+          break;
+        case AppUsage appUsage:
+          logMsg += $"[APP] {appUsage.Package} - {appUsage.Duration} ms";
+          break;
+      }
+
+      LogInfo(logMsg);
+    }
   }
+
+  public enum UsageLogType { SentDirectly, SentFromPersistence, Saved }
 }
