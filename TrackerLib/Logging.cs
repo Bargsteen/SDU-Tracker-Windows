@@ -13,7 +13,7 @@ namespace TrackerLib
     public static void SetupLogging()
     {
       var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-      XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+      XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo("log4net.config"));
     }
 
     public static void LogInfo(string msg) => _log.Info(msg);
