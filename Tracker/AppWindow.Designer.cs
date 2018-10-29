@@ -1,6 +1,6 @@
 ﻿namespace Tracker
 {
-    partial class Form1
+    partial class AppWindow
     {
         /// <summary>
         /// Required designer variable.

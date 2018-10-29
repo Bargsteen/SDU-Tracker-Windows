@@ -1,32 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
+using TrackerLib.Interfaces;
 
 namespace Tracker
 {
     class MyApplicationContext : ApplicationContext
     {
         private NotifyIcon trayIcon;
+        private IAppTimeKeeper appTimeKeeper;
 
-        public MyApplicationContext()
+        public MyApplicationContext(IAppTimeKeeper appTimeKeeper)
         {
-            //MenuItem exitMenuItem = new MenuItem("Afslut", new EventHandler(Exit));
+            this.appTimeKeeper = appTimeKeeper;
 
             trayIcon = new NotifyIcon()
             {
-                Icon = Tracker.Properties.Resources.AppIcon,
+                Icon = Properties.Resources.AppIcon,
+
                 ContextMenu = new ContextMenu(new MenuItem[]
                 {
                     new MenuItem("Exit", Exit)
                 }),
                 Visible = true
             };
-
-
-
+            
+            PrintActiveWindowChanges();
         }
 
         private void Exit(object sender, EventArgs e)
@@ -34,6 +33,30 @@ namespace Tracker
             trayIcon.Visible = false;
 
             Application.Exit();
+        }
+
+        private void PrintActiveWindowChanges()
+        {
+            var thread = new Thread(() =>
+               {
+                   while (true)
+                   {
+                       var lastActiveWindow = appTimeKeeper.MaybeGetLastActiveWindow();
+                       if (lastActiveWindow != null)
+                       {
+                           var duration = Math.Round((lastActiveWindow.EndTime - lastActiveWindow.StartTime).TotalMilliseconds);
+
+                           Console.WriteLine($"{lastActiveWindow.Identifier} - {duration} ms");
+                       }
+                       Thread.Sleep(1000);
+                   }
+               })
+            {
+                // Makes it shutdown when the foreground threads have finished.
+                IsBackground = true 
+            };
+            thread.Start();
+            
         }
     }
 }
