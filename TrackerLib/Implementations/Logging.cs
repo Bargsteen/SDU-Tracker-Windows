@@ -4,8 +4,9 @@ using System.IO;
 using System.Reflection;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
+using TrackerLib.Enums;
 
-namespace TrackerLib
+namespace TrackerLib.Implementations
 {
     public class Logging : ILogging
     {
@@ -53,6 +54,4 @@ namespace TrackerLib
             Info(logMsg);
         }
     }
-
-    public enum UsageLogType { SentDirectly, SentFromPersistence, Saved }
 }

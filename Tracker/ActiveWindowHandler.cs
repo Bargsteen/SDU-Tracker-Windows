@@ -6,10 +6,10 @@ using TrackerLib.Models;
 
 namespace Tracker
 {
-    public class AppTimeKeeper : IAppTimeKeeper
+    public class ActiveWindowHandler : IActiveWindowHandler
     {
         private ActiveWindow currentActiveWindow;
-        public AppTimeKeeper()
+        public ActiveWindowHandler()
         {
             currentActiveWindow = null;
         }

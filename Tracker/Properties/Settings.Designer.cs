@@ -8,23 +8,48 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Tracker.Properties
-{
+using System;
+using System.Collections.Generic;
+using TrackerLib.Enums;
 
-
+namespace Tracker.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        public string Username {
+            get {
+                return ((string)(this["Username"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        public string Password {
+            get {
+                return ((string)(this["Password"]));
+            }
+        }
+
+        public bool AppHasBeenSetup { get; internal set; }
+        public List<string> UserList { get; internal set; }
+        public string CurrentUser { get; internal set; }
+        public TrackingType TrackingType { get; internal set; }
+        public DateTimeOffset StopTrackingDate { get; internal set; }
+        public string UserId { get; internal set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using SimpleInjector;
 using System;
 using System.Windows.Forms;
-using TrackerLib;
+using TrackerLib.Implementations;
 using TrackerLib.Interfaces;
 
 namespace Tracker
@@ -15,9 +15,12 @@ namespace Tracker
             container = new Container();
             container.Register<ISettings, Settings>(Lifestyle.Singleton);
             container.Register<ILogging, Logging>(Lifestyle.Singleton);
-            container.Register<IAppTimeKeeper, AppTimeKeeper>();
+            container.Register<IActiveWindowHandler, ActiveWindowHandler>();
             container.Register<IPersistence, Persistence>();
             container.Register<ISendOrSaveHandler, SendOrSaveHandler>();
+            container.Register<IAppTrackingHandler, AppTrackingHandler>();
+            container.Register<IRequests, Requests>();
+            container.Register<IDateTimeHandler, DateTimeHandler>();
         }
 
         /// <summary>
@@ -26,12 +29,13 @@ namespace Tracker
         [STAThread]
         private static void Main()
         {
-            var appTimeKeeper = container.GetInstance<IAppTimeKeeper>();
+            var appTrackingHandler = container.GetInstance<IAppTrackingHandler>();
+            appTrackingHandler.StartTracking();
 
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MyApplicationContext(appTimeKeeper));
+            Application.Run(new MyApplicationContext(appTrackingHandler));
         }
     }
 }

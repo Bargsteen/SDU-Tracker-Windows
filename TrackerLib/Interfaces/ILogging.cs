@@ -1,4 +1,5 @@
 ﻿using TrackerLib.Models;
+using TrackerLib.Enums;
 
 namespace TrackerLib.Interfaces
 {

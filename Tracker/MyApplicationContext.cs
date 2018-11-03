@@ -8,11 +8,11 @@ namespace Tracker
     class MyApplicationContext : ApplicationContext
     {
         private NotifyIcon trayIcon;
-        private IAppTimeKeeper appTimeKeeper;
+        private IAppTrackingHandler appTrackingHandler;
 
-        public MyApplicationContext(IAppTimeKeeper appTimeKeeper)
+        public MyApplicationContext(IAppTrackingHandler appTrackingHandler)
         {
-            this.appTimeKeeper = appTimeKeeper;
+            this.appTrackingHandler = appTrackingHandler;
 
             trayIcon = new NotifyIcon()
             {
@@ -20,43 +20,30 @@ namespace Tracker
 
                 ContextMenu = new ContextMenu(new MenuItem[]
                 {
+                    new MenuItem("Start tracking", StartTracking),
+                    new MenuItem("Stop tracking", StopTracking),
                     new MenuItem("Exit", Exit)
                 }),
                 Visible = true
             };
-            
-            PrintActiveWindowChanges();
         }
+
+        private void StartTracking(object sender, EventArgs e)
+        {
+            appTrackingHandler.StartTracking();
+        }
+
+        private void StopTracking(object sender, EventArgs e)
+        {
+            appTrackingHandler.StopTracking();
+        }
+
 
         private void Exit(object sender, EventArgs e)
         {
             trayIcon.Visible = false;
 
             Application.Exit();
-        }
-
-        private void PrintActiveWindowChanges()
-        {
-            var thread = new Thread(() =>
-               {
-                   while (true)
-                   {
-                       var lastActiveWindow = appTimeKeeper.MaybeGetLastActiveWindow();
-                       if (lastActiveWindow != null)
-                       {
-                           var duration = Math.Round((lastActiveWindow.EndTime - lastActiveWindow.StartTime).TotalMilliseconds);
-
-                           Console.WriteLine($"{lastActiveWindow.Identifier} - {duration} ms");
-                       }
-                       Thread.Sleep(1000);
-                   }
-               })
-            {
-                // Makes it shutdown when the foreground threads have finished.
-                IsBackground = true 
-            };
-            thread.Start();
-            
         }
     }
 }

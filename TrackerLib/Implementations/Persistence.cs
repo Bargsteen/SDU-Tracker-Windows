@@ -4,7 +4,7 @@ using TrackerLib.Interfaces;
 using TrackerLib.Models;
 
 
-namespace TrackerLib
+namespace TrackerLib.Implementations
 {
     public class Persistence : IPersistence
     {

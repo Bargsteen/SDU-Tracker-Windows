@@ -6,7 +6,7 @@ using System.Text;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
 
-namespace TrackerLib
+namespace TrackerLib.Implementations
 {
     public class Requests : IRequests
     {

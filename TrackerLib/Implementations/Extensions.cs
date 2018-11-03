@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using TrackerLib.Models;
 
-namespace TrackerLib
+namespace TrackerLib.Implementations
 {
 
     public static class Extensions

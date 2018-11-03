@@ -2,7 +2,7 @@
 
 namespace TrackerLib.Interfaces
 {
-    public interface IAppTimeKeeper
+    public interface IActiveWindowHandler
     {
         ActiveWindow MaybeGetLastActiveWindow();
     }
