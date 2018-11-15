@@ -23,9 +23,9 @@ namespace Tracker
         {
             try
             {
-                uint processID;
-                GetWindowThreadProcessId(hWnd, out processID);
-                return Process.GetProcessById((int)processID);
+                uint processId;
+                GetWindowThreadProcessId(hWnd, out processId);
+                return Process.GetProcessById((int)processId);
             } catch
             {
                 return null;

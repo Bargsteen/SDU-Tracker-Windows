@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows.Forms;
 using TrackerLib.Interfaces;
 
@@ -7,14 +6,14 @@ namespace Tracker
 {
     class MyApplicationContext : ApplicationContext
     {
-        private NotifyIcon trayIcon;
-        private IAppTrackingHandler appTrackingHandler;
+        private NotifyIcon _trayIcon;
+        private IAppTracker _appTrackingHandler;
 
-        public MyApplicationContext(IAppTrackingHandler appTrackingHandler)
+        public MyApplicationContext(IAppTracker appTrackingHandler)
         {
-            this.appTrackingHandler = appTrackingHandler;
+            this._appTrackingHandler = appTrackingHandler;
 
-            trayIcon = new NotifyIcon()
+            _trayIcon = new NotifyIcon()
             {
                 Icon = Properties.Resources.AppIcon,
 
@@ -30,18 +29,17 @@ namespace Tracker
 
         private void StartTracking(object sender, EventArgs e)
         {
-            appTrackingHandler.StartTracking();
+            _appTrackingHandler.StartTracking();
         }
 
         private void StopTracking(object sender, EventArgs e)
         {
-            appTrackingHandler.StopTracking();
         }
 
 
         private void Exit(object sender, EventArgs e)
         {
-            trayIcon.Visible = false;
+            _trayIcon.Visible = false;
 
             Application.Exit();
         }

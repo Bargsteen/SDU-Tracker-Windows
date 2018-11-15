@@ -10,9 +10,9 @@ namespace TrackerLib.Implementations
 {
     public class Requests : IRequests
     {
-        private static readonly HttpClient client = new HttpClient();
-        private const string baseUrl = "https://screens.sdu.dk/v1/";
-        public void SendUsageAsync(IUsage usage, Credentials credentials, Action onSuccess, Action onError)
+        private static readonly HttpClient Client = new HttpClient();
+        private const string BaseUrl = "https://screens.sdu.dk/v1/";
+        public void SendUsageAsync(Usage usage, Credentials credentials, Action onSuccess, Action onError)
         {
             // Set url dependent on usage type
             string urlEnding = "";
@@ -25,10 +25,10 @@ namespace TrackerLib.Implementations
                     urlEnding = "device_usages";
                     break;
             }
-            var url = baseUrl + urlEnding;
+            string url = BaseUrl + urlEnding;
 
             // Content
-            var jsonUsage = usage.ToJson();
+            string jsonUsage = usage.ToJson();
             var content = new StringContent(jsonUsage, Encoding.UTF8, "application/json");
 
             // Authorization
@@ -36,7 +36,7 @@ namespace TrackerLib.Implementations
                                     .ToBase64String(Encoding.GetEncoding("ISO-8859-1")
                                     .GetBytes($"{credentials.Username}:{credentials.Password}"));
 
-            client.DefaultRequestHeaders.Authorization =
+            Client.DefaultRequestHeaders.Authorization =
               new AuthenticationHeaderValue("Basic", encodedCredentials);
 
 
@@ -44,9 +44,10 @@ namespace TrackerLib.Implementations
             HttpResponseMessage response = null;
             try
             {
-                response = client.PostAsync(url, content).Result;
+                response = Client.PostAsync(url, content).Result;
             }
-            catch { } // Not really interested in the Error. Just needed to avoid runtime errors.
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch { } // We are not interested in the error. Just call onError if anything went wrong.
             finally
             {
                 if (response?.StatusCode == HttpStatusCode.OK)

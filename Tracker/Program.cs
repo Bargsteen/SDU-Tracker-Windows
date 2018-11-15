@@ -8,19 +8,19 @@ namespace Tracker
 {
     internal static class Program
     {
-        private static readonly Container container;
+        private static readonly Container Container;
 
         static Program()
         {
-            container = new Container();
-            container.Register<ISettings, Settings>(Lifestyle.Singleton);
-            container.Register<ILogging, Logging>(Lifestyle.Singleton);
-            container.Register<IActiveWindowHandler, ActiveWindowHandler>();
-            container.Register<IPersistence, Persistence>();
-            container.Register<ISendOrSaveHandler, SendOrSaveHandler>();
-            container.Register<IAppTrackingHandler, AppTrackingHandler>();
-            container.Register<IRequests, Requests>();
-            container.Register<IDateTimeHandler, DateTimeHandler>();
+            Container = new Container();
+            Container.Register<ISettings, Settings>(Lifestyle.Singleton);
+            Container.Register<ILogger, Logger>(Lifestyle.Singleton);
+            Container.Register<IActiveWindowHandler, ActiveWindowHandler>();
+            Container.Register<IPersistence, Persistence>();
+            Container.Register<ISendOrSaveHandler, SendOrSaveHandler>();
+            Container.Register<IAppTracker, AppTracker>();
+            Container.Register<IRequests, Requests>();
+            Container.Register<IDateTimeHandler, DateTimeHandler>();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Tracker
         [STAThread]
         private static void Main()
         {
-            var appTrackingHandler = container.GetInstance<IAppTrackingHandler>();
+            var appTrackingHandler = Container.GetInstance<IAppTracker>();
             appTrackingHandler.StartTracking();
 
 

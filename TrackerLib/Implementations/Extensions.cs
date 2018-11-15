@@ -6,7 +6,7 @@ namespace TrackerLib.Implementations
 
     public static class Extensions
     {
-        public static string ToJson(this IUsage usage)
+        public static string ToJson(this Usage usage)
         {
             return JsonConvert.SerializeObject(usage);
         }

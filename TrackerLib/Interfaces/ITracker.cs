@@ -1,8 +1,7 @@
 ﻿namespace TrackerLib.Interfaces
 {
-    public interface ITrackingHandler
+    public interface ITracker
     {
         void StartTracking();
-        void StopTracking();
     }
 }

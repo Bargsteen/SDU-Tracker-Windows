@@ -1,37 +1,39 @@
 ﻿using Newtonsoft.Json;
-using Realms;
 using System;
 
 namespace TrackerLib.Models
 {
-    public class AppUsage : RealmObject, IUsage
+    public class AppUsage : Usage
     {
-        public AppUsage() { }
+        protected AppUsage() {}
+
         public AppUsage(string participantIdentifier, string deviceModelName,
                         DateTimeOffset timeStamp, int userCount, string package,
-                        int duration)
+                        int duration) : base(participantIdentifier, deviceModelName, userCount)
         {
-            ParticipantIdentifier = participantIdentifier;
-            DeviceModelName = deviceModelName;
             TimeStamp = timeStamp;
-            UserCount = userCount;
+            
+            Package = package;
+            Duration = duration;
+        }
+
+        public AppUsage(string participantIdentifier, string deviceModelName,
+            DateTimeOffset timeStamp, int userCount, string package,
+            int duration, int id) : base(participantIdentifier, deviceModelName, userCount, id)
+        {
+            TimeStamp = timeStamp;
 
             Package = package;
             Duration = duration;
         }
-        public string ParticipantIdentifier { get; set; }
-        public string DeviceModelName { get; set; }
-        public int UserCount { get; set; }
 
         [JsonProperty("date")]
-        public DateTimeOffset TimeStamp { get; set; }
+        public sealed override DateTimeOffset TimeStamp { get; set; }
 
         [JsonProperty("package")]
         public string Package { get; set; }
 
         [JsonProperty("duration")]
         public int Duration { get; set; }
-
-        public string UsageIdentifier => $"app_{ParticipantIdentifier}_{TimeStamp}_{Package}";
     }
 }

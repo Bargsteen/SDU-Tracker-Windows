@@ -8,10 +8,10 @@ namespace Tracker
 {
     public class ActiveWindowHandler : IActiveWindowHandler
     {
-        private ActiveWindow currentActiveWindow;
+        private ActiveWindow _currentActiveWindow;
         public ActiveWindowHandler()
         {
-            currentActiveWindow = null;
+            _currentActiveWindow = null;
         }
 
         public ActiveWindow MaybeGetLastActiveWindow()
@@ -21,23 +21,23 @@ namespace Tracker
             {
                 var now = DateTimeOffset.UtcNow;
                 var activeProcessIdentifier = GetIdentifier(activeProcess);
-                if (currentActiveWindow != null)
+                if (_currentActiveWindow != null)
                 {
-                    if (currentActiveWindow.Identifier != activeProcessIdentifier) // Switched window
+                    if (_currentActiveWindow.Identifier != activeProcessIdentifier) // Switched window
                     {
                         // Add endtime to currentActiveWindow
-                        currentActiveWindow.EndTime = now;
-                        var lastActiveWindow = (ActiveWindow)currentActiveWindow.Clone();
+                        _currentActiveWindow.EndTime = now;
+                        var lastActiveWindow = (ActiveWindow)_currentActiveWindow.Clone();
 
                         // Set new currentActive window.
-                        currentActiveWindow = new ActiveWindow(activeProcessIdentifier, now);
+                        _currentActiveWindow = new ActiveWindow(activeProcessIdentifier, now);
 
                         return lastActiveWindow;
                     }
                 }
                 else // First current active window
                 {
-                    currentActiveWindow = new ActiveWindow(activeProcessIdentifier, now);
+                    _currentActiveWindow = new ActiveWindow(activeProcessIdentifier, now);
                 }
             }
             return null;
@@ -67,8 +67,8 @@ namespace Tracker
         {
             try
             {
-                GetWindowThreadProcessId(hWnd, out uint processID);
-                return Process.GetProcessById((int)processID);
+                GetWindowThreadProcessId(hWnd, out uint processId);
+                return Process.GetProcessById((int)processId);
             }
             catch
             {

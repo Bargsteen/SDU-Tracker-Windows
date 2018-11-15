@@ -8,23 +8,23 @@ using TrackerLib.Enums;
 
 namespace TrackerLib.Implementations
 {
-    public class Logging : ILogging
+    public class Logger : ILogger
     {
         private readonly ILog _log;
-        public Logging()
+        public Logger()
         {
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo("log4net.config"));
         }
 
-        public void Info(string msg) => _log.Info(msg);
-        public void Debug(string msg) => _log.Debug(msg);
-        public void Error(string msg) => _log.Error(msg);
-        public void Fatal(string msg) => _log.Fatal(msg);
+        public void LogInfo(string msg) => _log.Info(msg);
+        public void LogDebug(string msg) => _log.Debug(msg);
+        public void LogError(string msg) => _log.Error(msg);
+        public void LogFatal(string msg) => _log.Fatal(msg);
 
 
-        public void Usage<T>(T usage, UsageLogType usageLogType) where T : IUsage
+        public void LogUsage<T>(T usage, UsageLogType usageLogType) where T : Usage
         {
             string logMsg = "";
 
@@ -51,7 +51,7 @@ namespace TrackerLib.Implementations
                     break;
             }
 
-            Info(logMsg);
+            LogInfo(logMsg);
         }
     }
 }

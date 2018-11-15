@@ -5,6 +5,6 @@ namespace TrackerLib.Implementations
 {
     public class DateTimeHandler : IDateTimeHandler
     {
-        public DateTimeOffset Now => DateTimeOffset.UtcNow;
+        public DateTimeOffset CurrentTime => DateTimeOffset.UtcNow;
     }
 }

@@ -1,4 +1,3 @@
-using Realms;
 using System;
 using System.Linq;
 using TrackerLib.Interfaces;
@@ -9,25 +8,25 @@ namespace TrackerLib.Implementations
 {
     public class SendOrSaveHandler : ISendOrSaveHandler
     {
-        private readonly ILogging logging;
-        private readonly IPersistence persistence;
-        private readonly IRequests requests;
-        private readonly ISettings settings;
+        private readonly ILogger _logger;
+        private readonly IPersistence _persistence;
+        private readonly IRequests _requests;
+        private readonly ISettings _settings;
 
-        private readonly Credentials credentials;
+        private readonly Credentials _credentials;
 
-        public SendOrSaveHandler(ILogging logging, IPersistence persistence, IRequests requests, ISettings settings)
+        public SendOrSaveHandler(ILogger logger, IPersistence persistence, IRequests requests, ISettings settings)
         {
-            this.logging = logging;
-            this.persistence = persistence;
-            this.requests = requests;
-            this.settings = settings;
+            this._logger = logger;
+            this._persistence = persistence;
+            this._requests = requests;
+            this._settings = settings;
 
-            credentials = settings.Credentials;
+            _credentials = settings.Credentials;
         }
 
         public void SendOrSaveUsage<T>(T usage, bool fromPersistence)
-          where T : RealmObject, IUsage
+          where T : Usage
         {
             Action onSuccess;
             Action onError;
@@ -36,42 +35,32 @@ namespace TrackerLib.Implementations
             {
                 onSuccess = () =>
                 {
-                    persistence.DeleteUsage(usage);
-                    logging.Usage(usage, UsageLogType.SentFromPersistence);
+                    _persistence.Delete(usage);
+                    _logger.LogUsage(usage, UsageLogType.SentFromPersistence);
                 };
                 onError = () => { }; // Let it stay in persistence.
             }
             else
             {
-                onSuccess = () => logging.Usage(usage, UsageLogType.SentDirectly);
+                onSuccess = () => _logger.LogUsage(usage, UsageLogType.SentDirectly);
                 onError = () =>
                 {
-                    persistence.SaveUsage(usage);
-                    logging.Usage(usage, UsageLogType.Saved);
+                    _persistence.Save(usage);
+                    _logger.LogUsage(usage, UsageLogType.Saved);
                 };
             }
 
-            requests.SendUsageAsync(usage, credentials, onSuccess, onError);
+            _requests.SendUsageAsync(usage, _credentials, onSuccess, onError);
 
         }
 
         public void SendSomeUsagesFromPersistence(int limitOfEach = 10)
         {
-            var appUsages = persistence.FetchAppUsages();
-            var deviceUsages = persistence.FetchDeviceUsages();
+            var appUsages = _persistence.FetchAppUsages(upTo: limitOfEach);
+            var deviceUsages = _persistence.FetchDeviceUsages(upTo: limitOfEach);
 
-            int appUsagesCount = appUsages.Count();
-            int deviceUsagesCount = deviceUsages.Count();
-
-            for (int i = 0; i < limitOfEach && i < appUsagesCount; i++)
-            {
-                SendOrSaveUsage(appUsages.First(), true);
-            }
-
-            for (int i = 0; i < limitOfEach && i < deviceUsagesCount; i++)
-            {
-                SendOrSaveUsage(deviceUsages.First(), true);
-            }
+            appUsages.ForEach(appUsage => SendOrSaveUsage(appUsage, true));
+            deviceUsages.ForEach(deviceUsage => SendOrSaveUsage(deviceUsage, true)); 
         }
     }
 }

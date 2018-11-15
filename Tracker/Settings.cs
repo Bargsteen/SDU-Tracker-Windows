@@ -8,49 +8,49 @@ namespace Tracker
 {
     public class Settings : ISettings
     {
-        private readonly Properties.Settings settings = Properties.Settings.Default;
+        private readonly Properties.Settings _settings = Properties.Settings.Default;
 
         public bool AppHasBeenSetup
         {
-            get => settings?.AppHasBeenSetup ?? false;
+            get => _settings?.AppHasBeenSetup ?? false;
             set
             {
-                settings.AppHasBeenSetup = value;
-                settings.Save();
+                _settings.AppHasBeenSetup = value;
+                _settings.Save();
             }
         }
 
-        public List<string> Users => settings?.UserList ?? new List<string>();
+        public List<string> Users => _settings?.UserList ?? new List<string>();
 
         public void AddUser(string nameOfUser)
         {
-            if(settings.UserList == null)
+            if(_settings.UserList == null)
             {
-                settings.UserList = new List<string>();
+                _settings.UserList = new List<string>();
             }
 
-            if (!settings.UserList.Contains(nameOfUser))
+            if (!_settings.UserList.Contains(nameOfUser))
             {
-                settings.UserList.Add(nameOfUser);
-                settings.Save();
+                _settings.UserList.Add(nameOfUser);
+                _settings.Save();
             }
         }
 
         public void RemoveUser(string nameOfUser)
         {
-            settings?.UserList.Remove(nameOfUser);
-            settings.Save();
+            _settings?.UserList.Remove(nameOfUser);
+            _settings.Save();
         }
 
-        public int UserCount => settings.UserList?.Count ?? 1;
+        public int UserCount => _settings.UserList?.Count ?? 1;
 
         public string CurrentUser
         {
-            get => settings?.CurrentUser ?? "ukendt-bruger";
+            get => _settings?.CurrentUser ?? "ukendt-bruger";
             set
             {
-                settings.CurrentUser = value;
-                settings.Save();
+                _settings.CurrentUser = value;
+                _settings.Save();
             }
         }
 
@@ -58,36 +58,36 @@ namespace Tracker
 
         public TrackingType TrackingType
         {
-            get => settings?.TrackingType ?? TrackingType.Device;
+            get => _settings?.TrackingType ?? TrackingType.Device;
             set
             {
-                settings.TrackingType = value;
-                settings.Save();
+                _settings.TrackingType = value;
+                _settings.Save();
             }
         }
 
         public DateTimeOffset StopTrackingDate
         {
-            get => settings?.StopTrackingDate ?? DateTimeOffset.MaxValue;
+            get => _settings?.StopTrackingDate ?? DateTimeOffset.MaxValue;
             set
             {
-                settings.StopTrackingDate = value;
-                settings.Save();
+                _settings.StopTrackingDate = value;
+                _settings.Save();
             }
         }
 
         public string UserId
         {
-            get => settings?.UserId ?? "ukendt-id";
+            get => _settings?.UserId ?? "ukendt-id";
             set
             {
-                settings.UserId = value;
-                settings.Save();
+                _settings.UserId = value;
+                _settings.Save();
             }
         }
 
         public string ParticipantIdentifier => $"{UserId}:{CurrentUser}";
 
-        public Credentials Credentials => new Credentials(settings.Username, settings.Password);
+        public Credentials Credentials => new Credentials(_settings.Username, _settings.Password);
     }
 }

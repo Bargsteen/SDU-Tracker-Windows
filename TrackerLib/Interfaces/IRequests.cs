@@ -5,6 +5,6 @@ namespace TrackerLib.Interfaces
 {
     public interface IRequests
     {
-        void SendUsageAsync(IUsage usage, Credentials credentials, Action onSuccess, Action onError);
+        void SendUsageAsync(Usage usage, Credentials credentials, Action onSuccess, Action onError);
     }
 }
