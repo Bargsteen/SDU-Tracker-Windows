@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Microsoft.Data.Sqlite;
 using TrackerLib.Implementations;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
@@ -10,16 +11,18 @@ namespace TrackerLibTests
     public class PersistenceTests : IDisposable
     {
         private readonly IPersistence _persistence;
+        private readonly SqliteConnection _connection;
 
         public PersistenceTests()
         {
-            _persistence = new Persistence(useInMemoryDatabase: false);
-     
+            _connection = new SqliteConnection("DataSource=:memory:");
+            _connection.Open();
+            _persistence = new Persistence(_connection);
         }
 
         public void Dispose()
         {
-
+            _connection.Close();
         }
 
         [Fact]

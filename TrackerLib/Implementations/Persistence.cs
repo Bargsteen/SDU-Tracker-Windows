@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
 
@@ -11,25 +10,34 @@ namespace TrackerLib.Implementations
 {
     public class Persistence : IPersistence
     {
-        private readonly bool _databaseType;
-        private readonly string _connectionString;
+        private readonly bool _useInMemoryDatabase;
+        private readonly DbContextOptions<UsageContext> _options;
 
-        
-
-        public Persistence(bool useInMemoryDatabase = false)
+        public Persistence()
         {
-            _databaseType = useInMemoryDatabase;
-            _connectionString = _databaseType ? "DataSource = :memory:" : "DataSource = sdu-tracker.db";
+            _options = new DbContextOptionsBuilder<UsageContext>().UseSqlite("DataSource = sdu-tracker.db").Options;
+            EnsureDatabaseIsCreated();
+        }
 
-            using (var db = GetUsageContext())
+        public Persistence(SqliteConnection connection)
+        {
+            _options = new DbContextOptionsBuilder<UsageContext>()
+                .UseSqlite(connection)
+                .Options;
+            EnsureDatabaseIsCreated();
+        }
+
+        private void EnsureDatabaseIsCreated()
+        {
+            using (var db = new UsageContext(_options))
             {
-                db.Database.Migrate();
+                db.Database.EnsureCreated();
             }
         }
 
         public void Save<T>(T usage) where T : Usage
         {
-            using (var db = GetUsageContext())
+            using (var db = new UsageContext(_options))
             {
                 db.Add(usage);
                 db.SaveChanges();
@@ -38,7 +46,7 @@ namespace TrackerLib.Implementations
 
         public void Delete<T>(T usage) where T : Usage
         {
-            using (var db = GetUsageContext())
+            using (var db = new UsageContext(_options))
             {
                 db.Remove(usage);
                 db.SaveChanges();
@@ -47,7 +55,7 @@ namespace TrackerLib.Implementations
 
         public List<AppUsage> FetchAppUsages(int upTo)
         {
-            using (var db = GetUsageContext())
+            using (var db = new UsageContext(_options))
             {
                 return db.AppUsages.OrderBy(a => a.TimeStamp).Take(upTo).ToList();
             }
@@ -55,19 +63,10 @@ namespace TrackerLib.Implementations
 
         public List<DeviceUsage> FetchDeviceUsages(int upTo)
         {
-            using (var db = GetUsageContext())
+            using (var db = new UsageContext(_options))
             {
                 return db.DeviceUsages.OrderBy(a => a.TimeStamp).Take(upTo).ToList();
             }
-        }
-
-        private UsageContext GetUsageContext()
-        {
-            var connection = new SqliteConnection(_connectionString);
-            var options = new DbContextOptionsBuilder<UsageContext>()
-                .UseSqlite(connection)
-                .Options;
-            return new UsageContext(options);
         }
     }
 
@@ -79,22 +78,6 @@ namespace TrackerLib.Implementations
 
         public UsageContext(DbContextOptions options) : base(options)
         {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("DataSource = sdu-tracker.db");
-        }
-    }
-
-    public class BloggingContextFactory : IDesignTimeDbContextFactory<UsageContext>
-    {
-        public UsageContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<UsageContext>();
-            optionsBuilder.UseSqlite("Data Source=blog.db");
-
-            return new UsageContext(optionsBuilder.Options);
         }
     }
 }

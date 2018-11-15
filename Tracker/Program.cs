@@ -3,6 +3,7 @@ using System;
 using System.Windows.Forms;
 using TrackerLib.Implementations;
 using TrackerLib.Interfaces;
+using TrackerLib.Models;
 
 namespace Tracker
 {
@@ -16,11 +17,16 @@ namespace Tracker
             Container.Register<ISettings, Settings>(Lifestyle.Singleton);
             Container.Register<ILogger, Logger>(Lifestyle.Singleton);
             Container.Register<IActiveWindowHandler, ActiveWindowHandler>();
-            Container.Register<IPersistence, Persistence>();
+            Container.RegisterInstance(GetPersistence());
             Container.Register<ISendOrSaveHandler, SendOrSaveHandler>();
             Container.Register<IAppTracker, AppTracker>();
             Container.Register<IRequests, Requests>();
             Container.Register<IDateTimeHandler, DateTimeHandler>();
+        }
+
+        static IPersistence GetPersistence()
+        {
+            return new Persistence();
         }
 
         /// <summary>
@@ -29,13 +35,22 @@ namespace Tracker
         [STAThread]
         private static void Main()
         {
-            var appTrackingHandler = Container.GetInstance<IAppTracker>();
-            appTrackingHandler.StartTracking();
+            //var appTrackingHandler = Container.GetInstance<IAppTracker>();
+            //appTrackingHandler.StartTracking();
+            var persistence = Container.GetInstance<IPersistence>();
+            var appUsage = new AppUsage("parti", "mbp", DateTimeOffset.Now, 1, "package", 1);
 
+            //persistence.Save(appUsage);
 
+            var fetchedUsages = persistence.FetchAppUsages(upTo: 10);
+
+            fetchedUsages.ForEach(Console.WriteLine);
+            
+
+            /*
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MyApplicationContext(appTrackingHandler));
+            Application.Run(new MyApplicationContext(appTrackingHandler));*/
         }
     }
 }
