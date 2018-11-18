@@ -1,6 +1,6 @@
 ﻿namespace TrackerLib.Interfaces
 {
-    public interface IResendHandler
+    public interface IResendService
     {
         void StartPeriodicResendingOfSavedUsages();
     }

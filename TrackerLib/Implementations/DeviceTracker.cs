@@ -6,14 +6,14 @@ namespace TrackerLib.Implementations
 {
     public class DeviceTracker : IDeviceTracker
     {
-        private readonly ISendOrSaveHandler _sendOrSaveHandler;
+        private readonly ISendOrSaveService _sendOrSaveService;
         private readonly ISystemEventService _systemEventService;
         private readonly IUsageBuilder _usageBuilder;
 
-        public DeviceTracker(ISendOrSaveHandler sendOrSaveHandler, ISystemEventService systemEventService, 
+        public DeviceTracker(ISendOrSaveService sendOrSaveService, ISystemEventService systemEventService, 
             IUsageBuilder usageBuilder)
         {
-            _sendOrSaveHandler = sendOrSaveHandler;
+            _sendOrSaveService = sendOrSaveService;
             _systemEventService = systemEventService;
             _usageBuilder = usageBuilder;
         }
@@ -25,7 +25,7 @@ namespace TrackerLib.Implementations
 
             // Send initial
             var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Started);
-            _sendOrSaveHandler.SendOrSaveUsage(deviceUsage);
+            _sendOrSaveService.SendOrSaveUsage(deviceUsage);
         }
 
         public void StopTracking()
@@ -39,19 +39,19 @@ namespace TrackerLib.Implementations
 
             // Send final
             var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Ended);
-            _sendOrSaveHandler.SendOrSaveUsage(deviceUsage);
+            _sendOrSaveService.SendOrSaveUsage(deviceUsage);
         }
 
         private void HandleSystemSuspended(object sender, EventArgs e)
         {
             var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Ended);
-            _sendOrSaveHandler.SendOrSaveUsage(deviceUsage);
+            _sendOrSaveService.SendOrSaveUsage(deviceUsage);
         }
 
         private void HandleSystemResumed(object sender, EventArgs e)
         {
             var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Started);
-            _sendOrSaveHandler.SendOrSaveUsage(deviceUsage);
+            _sendOrSaveService.SendOrSaveUsage(deviceUsage);
         }
     }
 }

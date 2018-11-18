@@ -2,7 +2,7 @@
 
 namespace TrackerLib.Implementations
 {
-    public class UserHandler : IUserHandler
+    public class UserService : IUserService
     {
         public void CheckIfUserHasChanged()
         {

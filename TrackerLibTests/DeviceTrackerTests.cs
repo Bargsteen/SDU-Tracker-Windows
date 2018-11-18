@@ -11,12 +11,12 @@ namespace TrackerLibTests
     {
         private readonly IDeviceTracker _deviceTracker;
 
-        private readonly Mock<ISendOrSaveHandler> _sendOrSaveHandler;
+        private readonly Mock<ISendOrSaveService> _sendOrSaveHandler;
         private readonly Mock<ISystemEventService> _systemEventService;
 
         public DeviceTrackerTests()
         {
-            _sendOrSaveHandler = new Mock<ISendOrSaveHandler>();
+            _sendOrSaveHandler = new Mock<ISendOrSaveService>();
             _systemEventService = new Mock<ISystemEventService>();
             var usageBuilder = new Mock<IUsageBuilder>();
 

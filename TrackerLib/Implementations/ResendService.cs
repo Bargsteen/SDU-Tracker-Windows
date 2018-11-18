@@ -2,7 +2,7 @@
 
 namespace TrackerLib.Implementations
 {
-    public class ResendHandler : IResendHandler
+    public class ResendService : IResendService
     {
         public void StartPeriodicResendingOfSavedUsages()
         {

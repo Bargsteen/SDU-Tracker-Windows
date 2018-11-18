@@ -1,6 +1,7 @@
 ﻿using SimpleInjector;
 using System;
 using System.Windows.Forms;
+using Tracker.Implementations;
 using TrackerLib.Enums;
 using TrackerLib.Implementations;
 using TrackerLib.Interfaces;
@@ -40,21 +41,21 @@ namespace Tracker
             //container.Register<ISettings, Settings>(Lifestyle.Singleton);
             container.RegisterInstance(GetSettings());
             container.Register<ILogger, Logger>(Lifestyle.Singleton);
-            container.Register<IActiveWindowHandler, ActiveWindowHandler>();
+            container.Register<IActiveWindowService, ActiveWindowService>();
             container.RegisterInstance(GetPersistence());
-            container.Register<ISendOrSaveHandler, SendOrSaveHandler>();
+            container.Register<ISendOrSaveService, SendOrSaveService>();
             container.Register<IAppTracker, AppTracker>();
             container.Register<IRequests, Requests>();
-            container.Register<IDateTimeHandler, DateTimeHandler>();
+            container.Register<IDateTimeService, DateTimeService>();
             container.Register<IRunner, Runner>();
-            container.Register<ISleepHandler, SleepHandler>();
+            container.Register<ISleepService, SleepService>();
             container.Register<ISystemEventService, SystemEventService>();
             container.Register<IDeviceTracker, DeviceTracker>();
-            container.Register<IAlertHandler, AlertHandler>();
+            container.Register<IAlertService, AlertService>();
             container.Register<IUsageBuilder, UsageBuilder>();
-            container.Register<ILaunchAtLoginHandler, LaunchAtLoginHandler>();
-            container.Register<IUserHandler, UserHandler>();
-            container.Register<IResendHandler, ResendHandler>();
+            container.Register<ILaunchAtLoginService, LaunchAtLoginService>();
+            container.Register<IUserService, UserService>();
+            container.Register<IResendService, ResendService>();
 
             return container;
         }

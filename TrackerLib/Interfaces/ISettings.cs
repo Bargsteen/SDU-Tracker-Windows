@@ -15,6 +15,8 @@ namespace TrackerLib.Interfaces
         int UserCount { get; }
         string CurrentUser { get; set; }
 
+
+
         string DeviceModelName { get; }
 
         TrackingType TrackingType { get; set; }

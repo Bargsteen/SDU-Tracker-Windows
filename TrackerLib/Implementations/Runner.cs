@@ -7,30 +7,30 @@ namespace TrackerLib.Implementations
 {
     public class Runner : IRunner
     {
-        private readonly IAlertHandler _alertHandler;
+        private readonly IAlertService _alertService;
         private readonly IAppTracker _appTracker;
-        private readonly IDateTimeHandler _dateTimeHandler;
+        private readonly IDateTimeService _dateTimeService;
         private readonly IDeviceTracker _deviceTracker;
-        private readonly ILaunchAtLoginHandler _launchAtLoginHandler;
+        private readonly ILaunchAtLoginService _launchAtLoginService;
         private readonly ILogger _logger;
-        private readonly IResendHandler _resendHandler;
+        private readonly IResendService _resendService;
         private readonly ISettings _settings;
-        private readonly IUserHandler _userHandler;
+        private readonly IUserService _userService;
 
 
-        public Runner(IAlertHandler alertHandler, IAppTracker appTracker, IDateTimeHandler dateTimeHandler, 
-            IDeviceTracker deviceTracker, ILaunchAtLoginHandler launchAtLoginHandler, ILogger logger, 
-            IResendHandler resendHandler, ISettings settings, IUserHandler userHandler)
+        public Runner(IAlertService alertService, IAppTracker appTracker, IDateTimeService dateTimeService, 
+            IDeviceTracker deviceTracker, ILaunchAtLoginService launchAtLoginService, ILogger logger, 
+            IResendService resendService, ISettings settings, IUserService userService)
         {
-            _alertHandler = alertHandler;
+            _alertService = alertService;
             _appTracker = appTracker;
-            _dateTimeHandler = dateTimeHandler;
+            _dateTimeService = dateTimeService;
             _deviceTracker = deviceTracker;
-            _launchAtLoginHandler = launchAtLoginHandler;
+            _launchAtLoginService = launchAtLoginService;
             _logger = logger;
-            _resendHandler = resendHandler;
+            _resendService = resendService;
             _settings = settings;
-            _userHandler = userHandler;
+            _userService = userService;
         }
 
         public void Run()
@@ -38,16 +38,16 @@ namespace TrackerLib.Implementations
             if (!_settings.AppHasBeenSetup)
             {
                 _logger.LogInfo(LoggerConstants.AppHasNotBeenSetupText);
-                _alertHandler.ShowAlert(AlertsConstants.ReadyForSetupTitle, AlertsConstants.ReadyForSetupMessage,
+                _alertService.ShowAlert(AlertsConstants.ReadyForSetupTitle, AlertsConstants.ReadyForSetupMessage,
                     AlertsConstants.OkButtonText, AlertsConstants.LongAlertTime);
             }
             else
             {
-                if (_dateTimeHandler.CurrentTime <= _settings.StopTrackingDate)
+                if (_dateTimeService.CurrentTime <= _settings.StopTrackingDate)
                 {
-                    _userHandler.CheckIfUserHasChanged();
+                    _userService.CheckIfUserHasChanged();
 
-                    _resendHandler.StartPeriodicResendingOfSavedUsages();
+                    _resendService.StartPeriodicResendingOfSavedUsages();
 
                     if (_settings.TrackingType == TrackingType.AppAndDevice)
                     {
@@ -61,8 +61,8 @@ namespace TrackerLib.Implementations
                 }
                 else
                 {
-                    _launchAtLoginHandler.LaunchAtLoginIsEnabled = false;
-                    _alertHandler.ShowAlert(AlertsConstants.TrackingHasEndedTitle,
+                    _launchAtLoginService.LaunchAtLoginIsEnabled = false;
+                    _alertService.ShowAlert(AlertsConstants.TrackingHasEndedTitle,
                         AlertsConstants.TrackingHasEndedMessage, AlertsConstants.OkButtonText,
                         AlertsConstants.LongAlertTime);
                 }

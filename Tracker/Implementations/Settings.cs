@@ -4,7 +4,7 @@ using TrackerLib.Enums;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
 
-namespace Tracker
+namespace Tracker.Implementations
 {
     public class Settings : ISettings
     {

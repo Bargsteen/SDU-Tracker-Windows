@@ -5,7 +5,7 @@ using TrackerLib.Enums;
 
 namespace TrackerLib.Implementations
 {
-    public class SendOrSaveHandler : ISendOrSaveHandler
+    public class SendOrSaveService : ISendOrSaveService
     {
         private readonly ILogger _logger;
         private readonly IPersistence _persistence;
@@ -13,7 +13,7 @@ namespace TrackerLib.Implementations
 
         private readonly Credentials _credentials;
 
-        public SendOrSaveHandler(ILogger logger, IPersistence persistence, IRequests requests, ISettings settings)
+        public SendOrSaveService(ILogger logger, IPersistence persistence, IRequests requests, ISettings settings)
         {
             _logger = logger;
             _persistence = persistence;

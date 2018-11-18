@@ -2,7 +2,7 @@
 using Microsoft.Win32;
 using TrackerLib.Interfaces;
 
-namespace Tracker
+namespace Tracker.Implementations
 {
     public class SystemEventService : ISystemEventService
     {

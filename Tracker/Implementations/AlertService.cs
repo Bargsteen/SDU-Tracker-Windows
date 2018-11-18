@@ -1,8 +1,8 @@
 ﻿using TrackerLib.Interfaces;
 
-namespace Tracker
+namespace Tracker.Implementations
 {
-    public class AlertHandler : IAlertHandler
+    public class AlertService : IAlertService
     {
         public void ShowAlert(string title, string message, string buttonText, int durationInSeconds)
         {

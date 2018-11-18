@@ -1,5 +1,6 @@
 ﻿using System;
 using Tracker;
+using Tracker.Implementations;
 using TrackerLib.Interfaces;
 using Xunit;
 
@@ -7,26 +8,26 @@ namespace TrackerTests
 {
     public class LaunchAtLoginHandlerTests : IDisposable
     {
-        private ILaunchAtLoginHandler _launchAtLoginHandler;
+        private ILaunchAtLoginService _launchAtLoginService;
 
         public LaunchAtLoginHandlerTests()
         {
-            _launchAtLoginHandler = new LaunchAtLoginHandler();
+            _launchAtLoginService = new LaunchAtLoginService();
         }
 
         public void Dispose()
         {
-            _launchAtLoginHandler = null;
+            _launchAtLoginService = null;
         }
 
         [Fact]
         public void GetIsEnabled__HasBeenSetToTrue__ReturnsTrue()
         {
             // Arrange
-            _launchAtLoginHandler.LaunchAtLoginIsEnabled = true;
+            _launchAtLoginService.LaunchAtLoginIsEnabled = true;
 
             // Act
-            bool result = _launchAtLoginHandler.LaunchAtLoginIsEnabled;
+            bool result = _launchAtLoginService.LaunchAtLoginIsEnabled;
 
             // Assert
             Assert.True(result);
@@ -36,10 +37,10 @@ namespace TrackerTests
         public void GetIsEnabled__HasBeenSetToFalse__ReturnsFalse()
         {
             // Arrange
-            _launchAtLoginHandler.LaunchAtLoginIsEnabled = false;
+            _launchAtLoginService.LaunchAtLoginIsEnabled = false;
 
             // Act
-            bool result = _launchAtLoginHandler.LaunchAtLoginIsEnabled;
+            bool result = _launchAtLoginService.LaunchAtLoginIsEnabled;
 
             // Assert
             Assert.False(result);
@@ -49,10 +50,10 @@ namespace TrackerTests
         public void SetIsEnabled__HasJustBeenSetToFalse__CanBeSetAgain()
         {
             // Arrange
-            _launchAtLoginHandler.LaunchAtLoginIsEnabled = false;
+            _launchAtLoginService.LaunchAtLoginIsEnabled = false;
 
             // Act
-            _launchAtLoginHandler.LaunchAtLoginIsEnabled = false;
+            _launchAtLoginService.LaunchAtLoginIsEnabled = false;
 
             // Assert
             // Success if no error was thrown

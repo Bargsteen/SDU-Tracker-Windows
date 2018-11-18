@@ -6,19 +6,19 @@ namespace TrackerLib.Implementations
 {
     public class AppTracker : IAppTracker
     {
-        private readonly IActiveWindowHandler _activeWindowHandler;
-        private readonly ISendOrSaveHandler _sendOrSaveHandler;
-        private readonly ISleepHandler _sleepHandler;
+        private readonly IActiveWindowService _activeWindowService;
+        private readonly ISendOrSaveService _sendOrSaveService;
+        private readonly ISleepService _sleepService;
         private readonly IUsageBuilder _usageBuilder;
 
         private Thread _trackingThread;
 
-        public AppTracker(IActiveWindowHandler activeWindowHandler, ISendOrSaveHandler sendOrSaveHandler, 
-            ISleepHandler sleepHandler, IUsageBuilder usageBuilder)
+        public AppTracker(IActiveWindowService activeWindowService, ISendOrSaveService sendOrSaveService, 
+            ISleepService sleepService, IUsageBuilder usageBuilder)
         {
-            _activeWindowHandler = activeWindowHandler;
-            _sendOrSaveHandler = sendOrSaveHandler;
-            _sleepHandler = sleepHandler;
+            _activeWindowService = activeWindowService;
+            _sendOrSaveService = sendOrSaveService;
+            _sleepService = sleepService;
             _usageBuilder = usageBuilder;
         }
 
@@ -30,7 +30,7 @@ namespace TrackerLib.Implementations
                 while (true)
                 {
                     SendOrSaveIfAppHasChanged();
-                    _sleepHandler.SleepFor(TrackingConstants.SecondsBetweenActiveWindowChecks);
+                    _sleepService.SleepFor(TrackingConstants.SecondsBetweenActiveWindowChecks);
                 }
             })
             {
@@ -47,13 +47,13 @@ namespace TrackerLib.Implementations
 
         private void SendOrSaveIfAppHasChanged()
         {
-            var lastActiveWindow = _activeWindowHandler.MaybeGetLastActiveWindow();
+            var lastActiveWindow = _activeWindowService.MaybeGetLastActiveWindow();
 
             if (lastActiveWindow != null)
             {
                 var newAppUsage = _usageBuilder.MakeAppUsage(lastActiveWindow);
 
-                _sendOrSaveHandler.SendOrSaveUsage(newAppUsage);
+                _sendOrSaveService.SendOrSaveUsage(newAppUsage);
             }
         }
     }

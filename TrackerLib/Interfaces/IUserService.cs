@@ -1,6 +1,6 @@
 ﻿namespace TrackerLib.Interfaces
 {
-    public interface IUserHandler
+    public interface IUserService
     {
         void CheckIfUserHasChanged();
         void ShowUserWindow();

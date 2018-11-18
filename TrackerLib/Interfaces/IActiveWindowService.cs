@@ -2,7 +2,7 @@
 
 namespace TrackerLib.Interfaces
 {
-    public interface IActiveWindowHandler
+    public interface IActiveWindowService
     {
         ActiveWindow MaybeGetLastActiveWindow();
     }

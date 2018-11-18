@@ -11,14 +11,14 @@ namespace TrackerLibTests
     public class AppTrackerTests : IDisposable
     {
         private readonly IAppTracker _appTracker;
-        private readonly Mock<IActiveWindowHandler> _activeWindowHandler;
-        private readonly Mock<ISendOrSaveHandler> _sendOrSaveHandler;
+        private readonly Mock<IActiveWindowService> _activeWindowHandler;
+        private readonly Mock<ISendOrSaveService> _sendOrSaveHandler;
 
         public AppTrackerTests()
         {
-            _activeWindowHandler = new Mock<IActiveWindowHandler>();
-            _sendOrSaveHandler = new Mock<ISendOrSaveHandler>();
-            var sleepHandler = new Mock<ISleepHandler>();
+            _activeWindowHandler = new Mock<IActiveWindowService>();
+            _sendOrSaveHandler = new Mock<ISendOrSaveService>();
+            var sleepHandler = new Mock<ISleepService>();
             var usageBuilder = new Mock<IUsageBuilder>();
 
             _appTracker = new AppTracker(_activeWindowHandler.Object, _sendOrSaveHandler.Object, sleepHandler.Object,
@@ -41,7 +41,7 @@ namespace TrackerLibTests
             _appTracker.StartTracking();
 
             // Wait for the thread to start. Could be solved differently using a wrapper around the Thread.
-            // Similarly to how sleep is handled with the SleepHandler.
+            // Similarly to how sleep is handled with the SleepService.
             Thread.Sleep(100); 
 
             // Assert

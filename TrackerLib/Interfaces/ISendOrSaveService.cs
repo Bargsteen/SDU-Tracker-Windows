@@ -2,7 +2,7 @@
 
 namespace TrackerLib.Interfaces
 {
-    public interface ISendOrSaveHandler
+    public interface ISendOrSaveService
     {
         void SendOrSaveUsage<T>(T usage, bool fromPersistence = false)
             where T : Usage;

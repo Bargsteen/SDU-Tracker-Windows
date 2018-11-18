@@ -1,6 +1,6 @@
 ﻿namespace TrackerLib.Interfaces
 {
-    public interface ILaunchAtLoginHandler
+    public interface ILaunchAtLoginService
     {
         bool LaunchAtLoginIsEnabled { get; set; }
     }

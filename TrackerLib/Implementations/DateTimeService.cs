@@ -3,7 +3,7 @@ using TrackerLib.Interfaces;
 
 namespace TrackerLib.Implementations
 {
-    public class DateTimeHandler : IDateTimeHandler
+    public class DateTimeService : IDateTimeService
     {
         public DateTimeOffset CurrentTime => DateTimeOffset.UtcNow;
     }

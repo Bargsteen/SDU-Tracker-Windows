@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
 
-namespace Tracker
+namespace Tracker.Implementations
 {
-    public class ActiveWindowHandler : IActiveWindowHandler
+    public class ActiveWindowService : IActiveWindowService
     {
         private ActiveWindow _currentActiveWindow;
-        public ActiveWindowHandler()
+        public ActiveWindowService()
         {
             _currentActiveWindow = null;
         }

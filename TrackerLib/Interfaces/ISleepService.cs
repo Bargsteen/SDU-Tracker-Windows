@@ -1,6 +1,6 @@
 ﻿namespace TrackerLib.Interfaces
 {
-    public interface ISleepHandler
+    public interface ISleepService
     {
         void SleepFor(int seconds);
     }

@@ -14,15 +14,15 @@ namespace TrackerLibTests
     {
         public RunnerTests()
         {
-            _alertHandler = new Mock<IAlertHandler>();
+            _alertHandler = new Mock<IAlertService>();
             _appTracker = new Mock<IAppTracker>();
-            _dateTimeHandler = new Mock<IDateTimeHandler>();
+            _dateTimeHandler = new Mock<IDateTimeService>();
             _deviceTracker = new Mock<IDeviceTracker>();
-            _launchAtLoginHandler = new Mock<ILaunchAtLoginHandler>();
+            _launchAtLoginHandler = new Mock<ILaunchAtLoginService>();
             _logger = new Mock<ILogger>();
             _settings = new Mock<ISettings>();
-            _resendHandler = new Mock<IResendHandler>();
-            _userHandler = new Mock<IUserHandler>();
+            _resendHandler = new Mock<IResendService>();
+            _userHandler = new Mock<IUserService>();
 
             _runner = new Runner(_alertHandler.Object, _appTracker.Object, _dateTimeHandler.Object,
                 _deviceTracker.Object, _launchAtLoginHandler.Object, _logger.Object, 
@@ -36,15 +36,15 @@ namespace TrackerLibTests
 
         private readonly IRunner _runner;
 
-        private readonly Mock<IAlertHandler> _alertHandler;
+        private readonly Mock<IAlertService> _alertHandler;
         private readonly Mock<IAppTracker> _appTracker;
-        private readonly Mock<IDateTimeHandler> _dateTimeHandler;
+        private readonly Mock<IDateTimeService> _dateTimeHandler;
         private readonly Mock<IDeviceTracker> _deviceTracker;
-        private readonly Mock<ILaunchAtLoginHandler> _launchAtLoginHandler;
+        private readonly Mock<ILaunchAtLoginService> _launchAtLoginHandler;
         private readonly Mock<ILogger> _logger;
         private readonly Mock<ISettings> _settings;
-        private readonly Mock<IResendHandler> _resendHandler;
-        private readonly Mock<IUserHandler> _userHandler;
+        private readonly Mock<IResendService> _resendHandler;
+        private readonly Mock<IUserService> _userHandler;
 
         [Fact]
         public void Run__IsSetup_TrackingDateNotReached_AppAndDeviceTracking__StartsTrackingBoth()

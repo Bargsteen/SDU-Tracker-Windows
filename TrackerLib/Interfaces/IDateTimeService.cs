@@ -2,7 +2,7 @@
 
 namespace TrackerLib.Interfaces
 {
-    public interface IDateTimeHandler
+    public interface IDateTimeService
     {
         DateTimeOffset CurrentTime { get; }
     }

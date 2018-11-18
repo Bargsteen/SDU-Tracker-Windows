@@ -2,13 +2,13 @@
 using Microsoft.Win32;
 using TrackerLib.Interfaces;
 
-namespace Tracker
+namespace Tracker.Implementations
 {
-    public class LaunchAtLoginHandler : ILaunchAtLoginHandler
+    public class LaunchAtLoginService : ILaunchAtLoginService
     {
         private readonly RegistryKey _registryKey;
 
-        public LaunchAtLoginHandler()
+        public LaunchAtLoginService()
         {
             _registryKey = Registry.CurrentUser.OpenSubKey
                 ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);

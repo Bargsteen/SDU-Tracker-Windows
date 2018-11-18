@@ -4,7 +4,7 @@ using TrackerLib.Interfaces;
 
 namespace TrackerLib.Implementations
 {
-    public class SleepHandler : ISleepHandler
+    public class SleepService : ISleepService
     {
         public void SleepFor(int seconds)
         {
