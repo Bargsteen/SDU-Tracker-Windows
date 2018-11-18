@@ -12,10 +12,11 @@ namespace Tracker
 
         public MyApplicationContext(IRunner runner)
         {
+            SetupMenu();
+            Application.ApplicationExit += OnApplicationExit;
+
             _runner = runner;
             _runner.Run();
-
-            SetupMenu();
         }
 
         private void SetupMenu()
@@ -34,10 +35,14 @@ namespace Tracker
 
         private void Exit(object sender, EventArgs e)
         {
-            _runner.Terminate();
             _trayIcon.Visible = false;
 
             Application.Exit();
+        }
+
+        private void OnApplicationExit(object sender, EventArgs e)
+        {
+            _runner.Terminate();
         }
     }
 }
