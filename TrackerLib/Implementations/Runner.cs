@@ -13,16 +13,14 @@ namespace TrackerLib.Implementations
         private readonly IDeviceTracker _deviceTracker;
         private readonly ILaunchAtLoginHandler _launchAtLoginHandler;
         private readonly ILogger _logger;
-        private readonly ISendOrSaveHandler _sendOrSaveHandler;
-        private readonly ISettings _settings;
         private readonly IResendHandler _resendHandler;
-        private readonly IUsageBuilder _usageBuilder;
+        private readonly ISettings _settings;
         private readonly IUserHandler _userHandler;
+
 
         public Runner(IAlertHandler alertHandler, IAppTracker appTracker, IDateTimeHandler dateTimeHandler, 
             IDeviceTracker deviceTracker, ILaunchAtLoginHandler launchAtLoginHandler, ILogger logger, 
-            ISendOrSaveHandler sendOrSaveHandler, ISettings settings, IResendHandler resendHandler, 
-            IUsageBuilder usageBuilder, IUserHandler userHandler)
+            IResendHandler resendHandler, ISettings settings, IUserHandler userHandler)
         {
             _alertHandler = alertHandler;
             _appTracker = appTracker;
@@ -30,13 +28,10 @@ namespace TrackerLib.Implementations
             _deviceTracker = deviceTracker;
             _launchAtLoginHandler = launchAtLoginHandler;
             _logger = logger;
-            _sendOrSaveHandler = sendOrSaveHandler;
-            _settings = settings;
             _resendHandler = resendHandler;
-            _usageBuilder = usageBuilder;
+            _settings = settings;
             _userHandler = userHandler;
         }
-
 
         public void Run()
         {
@@ -78,8 +73,15 @@ namespace TrackerLib.Implementations
         {
             if (!_settings.AppHasBeenSetup) return;
 
-            var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Ended);
-            _sendOrSaveHandler.SendOrSaveUsage(deviceUsage);
+            if (_settings.TrackingType == TrackingType.AppAndDevice)
+            {
+                _appTracker.StopTracking();
+                _deviceTracker.StopTracking();
+            }
+            else
+            {
+                _deviceTracker.StopTracking();
+            }
         }
     }
 }

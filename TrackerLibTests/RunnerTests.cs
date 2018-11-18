@@ -20,17 +20,13 @@ namespace TrackerLibTests
             _deviceTracker = new Mock<IDeviceTracker>();
             _launchAtLoginHandler = new Mock<ILaunchAtLoginHandler>();
             _logger = new Mock<ILogger>();
-            _sendOrSaveHandler = new Mock<ISendOrSaveHandler>();
             _settings = new Mock<ISettings>();
             _resendHandler = new Mock<IResendHandler>();
-            _usageBuilder = new Mock<IUsageBuilder>();
             _userHandler = new Mock<IUserHandler>();
 
-
             _runner = new Runner(_alertHandler.Object, _appTracker.Object, _dateTimeHandler.Object,
-                _deviceTracker.Object,
-                _launchAtLoginHandler.Object, _logger.Object, _sendOrSaveHandler.Object, _settings.Object,
-                _resendHandler.Object, _usageBuilder.Object, _userHandler.Object);
+                _deviceTracker.Object, _launchAtLoginHandler.Object, _logger.Object, 
+                _resendHandler.Object, _settings.Object, _userHandler.Object);
         }
 
         public void Dispose()
@@ -46,10 +42,8 @@ namespace TrackerLibTests
         private readonly Mock<IDeviceTracker> _deviceTracker;
         private readonly Mock<ILaunchAtLoginHandler> _launchAtLoginHandler;
         private readonly Mock<ILogger> _logger;
-        private readonly Mock<ISendOrSaveHandler> _sendOrSaveHandler;
         private readonly Mock<ISettings> _settings;
         private readonly Mock<IResendHandler> _resendHandler;
-        private readonly Mock<IUsageBuilder> _usageBuilder;
         private readonly Mock<IUserHandler> _userHandler;
 
         [Fact]
@@ -131,20 +125,34 @@ namespace TrackerLibTests
         }
 
         [Fact]
-        public void Terminate__IsSetup__SendsDeviceEndedUsage()
+        public void Terminate__IsSetup_AppAndDeviceTracking__StopsTrackingBoth()
         {
             // Arrange
             _settings.Setup(s => s.AppHasBeenSetup).Returns(true);
-            _sendOrSaveHandler.Setup(s => s.SendOrSaveUsage(It.IsAny<Usage>(), It.IsAny<bool>()));
-            _usageBuilder.Setup(u => u.MakeDeviceUsage(EventType.Ended))
-                .Returns(new DeviceUsage("Test", "Test", DateTimeOffset.Now, 1, EventType.Ended));
+            _settings.SetupGet(s => s.TrackingType).Returns(TrackingType.AppAndDevice);
 
             // Act
             _runner.Terminate();
 
             // Assert
-            _sendOrSaveHandler.Verify(s => 
-                s.SendOrSaveUsage(It.Is<DeviceUsage>(d => d.EventType == EventType.Ended.GetHashCode()), false), Times.Once);
+            _appTracker.Verify(a => a.StopTracking(), Times.Once);
+            _deviceTracker.Verify(d => d.StopTracking(), Times.Once);
+        }
+
+        [Fact]
+        public void Terminate__IsSetup_AppAndDeviceTracking__StopsTrackingDevice()
+        {
+            // Arrange
+            _settings.Setup(s => s.AppHasBeenSetup).Returns(true);
+            _settings.SetupGet(s => s.TrackingType).Returns(TrackingType.Device);
+
+
+            // Act
+            _runner.Terminate();
+
+            // Assert
+            _appTracker.Verify(a => a.StopTracking(), Times.Never);
+            _deviceTracker.Verify(d => d.StopTracking(), Times.Once);
         }
 
         [Fact]
@@ -152,12 +160,14 @@ namespace TrackerLibTests
         {
             // Arrange
             _settings.Setup(s => s.AppHasBeenSetup).Returns(false);
+            _settings.SetupGet(s => s.TrackingType).Returns(TrackingType.AppAndDevice);
 
             // Act
             _runner.Terminate();
 
             // Assert
-            _sendOrSaveHandler.Verify(s => s.SendOrSaveUsage(It.IsAny<Usage>(), It.IsAny<bool>()), Times.Never);
+            _appTracker.Verify(a => a.StopTracking(), Times.Never);
+            _deviceTracker.Verify(d => d.StopTracking(), Times.Never);
         }
     }
 }

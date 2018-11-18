@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="UndefinedTools\**" />
+    <EmbeddedResource Remove="UndefinedTools\**" />
+    <None Remove="UndefinedTools\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20181115192304_InitialCreate.cs" />
   </ItemGroup>
 

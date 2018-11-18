@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Moq;
 using Xunit;
 using TrackerLib.Implementations;
@@ -11,21 +12,17 @@ namespace TrackerLibTests
     {
         private readonly IAppTracker _appTracker;
         private readonly Mock<IActiveWindowHandler> _activeWindowHandler;
-        private readonly Mock<DateTimeHandler> _dateTimeHandler;
         private readonly Mock<ISendOrSaveHandler> _sendOrSaveHandler;
-        private readonly Mock<ISettings> _settings;
-        private readonly Mock<ISleepHandler> _sleepHandler;
 
         public AppTrackerTests()
         {
             _activeWindowHandler = new Mock<IActiveWindowHandler>();
-            _dateTimeHandler = new Mock<DateTimeHandler>();
             _sendOrSaveHandler = new Mock<ISendOrSaveHandler>();
-            _settings = new Mock<ISettings>();
-            _sleepHandler = new Mock<ISleepHandler>();
+            var sleepHandler = new Mock<ISleepHandler>();
+            var usageBuilder = new Mock<IUsageBuilder>();
 
-            _appTracker = new AppTracker(_activeWindowHandler.Object, _dateTimeHandler.Object, 
-                _sendOrSaveHandler.Object, _settings.Object, _sleepHandler.Object);
+            _appTracker = new AppTracker(_activeWindowHandler.Object, _sendOrSaveHandler.Object, sleepHandler.Object,
+                usageBuilder.Object);
         }
 
         public void Dispose()
@@ -43,6 +40,10 @@ namespace TrackerLibTests
             // Act
             _appTracker.StartTracking();
 
+            // Wait for the thread to start. Could be solved differently using a wrapper around the Thread.
+            // Similarly to how sleep is handled with the SleepHandler.
+            Thread.Sleep(100); 
+
             // Assert
             _sendOrSaveHandler.Verify(s => s.SendOrSaveUsage(It.IsAny<AppUsage>(), false));
         }
@@ -58,7 +59,7 @@ namespace TrackerLibTests
             // Being Initialized
 
             // Assert
-            _sendOrSaveHandler.Verify(s => s.SendOrSaveUsage(It.IsAny<AppUsage>(), false));
+            _sendOrSaveHandler.Verify(s => s.SendOrSaveUsage(It.IsAny<AppUsage>(), false), Times.Never);
         }
     }
 }

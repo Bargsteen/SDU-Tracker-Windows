@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.Data.Sqlite;
 using TrackerLib.Implementations;
 using TrackerLib.Interfaces;
-using TrackerLib.Models;
 using Xunit;
 
 namespace TrackerLibTests
@@ -49,7 +48,7 @@ namespace TrackerLibTests
         public void FetchDeviceUsages__DbHasSingleDeviceUsage__FetchesSingle()
         {
             // Arrange
-            var deviceUsage = MakeTestDeviceUsage();
+            var deviceUsage = TestHelper.MakeTestDeviceUsage();
             _persistence.Save(deviceUsage);
 
             // Act
@@ -64,7 +63,7 @@ namespace TrackerLibTests
         public void FetchAppUsages__DbHasSingleAppUsage__FetchesSingle()
         {
             // Arrange
-            var appUsage = MakeTestAppUsage();
+            var appUsage = TestHelper.MakeTestAppUsage();
             _persistence.Save(appUsage);
 
             // Act
@@ -79,9 +78,9 @@ namespace TrackerLibTests
         public void FetchAppUsages__DbHasMultipleAppUsages__FetchesMultipleOrderedByDate()
         {
             // Arrange
-            var appUsageNew = MakeTestAppUsage("TestId1", DateTimeOffset.MaxValue);
-            var appUsageOld = MakeTestAppUsage("TestId2", DateTimeOffset.MinValue);
-            var appUsageNow = MakeTestAppUsage("TestId3", DateTimeOffset.UtcNow);
+            var appUsageNew = TestHelper.MakeTestAppUsage("TestId1", DateTimeOffset.MaxValue);
+            var appUsageOld = TestHelper.MakeTestAppUsage("TestId2", DateTimeOffset.MinValue);
+            var appUsageNow = TestHelper.MakeTestAppUsage("TestId3", DateTimeOffset.UtcNow);
 
             _persistence.Save(appUsageNew);
             _persistence.Save(appUsageOld);
@@ -100,9 +99,9 @@ namespace TrackerLibTests
         public void FetchDeviceUsages__DbHasMultipleDeviceUsages__FetchesMultipleOrderedByDate()
         {
             // Arrange
-            var deviceUsageNew = MakeTestDeviceUsage("TestId1", DateTimeOffset.MaxValue);
-            var deviceUsageOld = MakeTestDeviceUsage("TestId2", DateTimeOffset.MinValue);
-            var deviceUsageNow = MakeTestDeviceUsage("TestId3", DateTimeOffset.UtcNow);
+            var deviceUsageNew = TestHelper.MakeTestDeviceUsage("TestId1", DateTimeOffset.MaxValue);
+            var deviceUsageOld = TestHelper.MakeTestDeviceUsage("TestId2", DateTimeOffset.MinValue);
+            var deviceUsageNow = TestHelper.MakeTestDeviceUsage("TestId3", DateTimeOffset.UtcNow);
 
             _persistence.Save(deviceUsageNew);
             _persistence.Save(deviceUsageOld);
@@ -121,7 +120,7 @@ namespace TrackerLibTests
         public void DeleteUsage__DbHasSingleAppUsage__DbIsEmpty()
         {
             // Arrange
-            var appUsage = MakeTestAppUsage();
+            var appUsage = TestHelper.MakeTestAppUsage();
             _persistence.Save(appUsage);
 
             // Act
@@ -136,7 +135,7 @@ namespace TrackerLibTests
         public void DeleteUsage__DbHasSingleDeviceUsage__DbIsEmpty()
         {
             // Arrange
-            var deviceUsage = MakeTestDeviceUsage();
+            var deviceUsage = TestHelper.MakeTestDeviceUsage();
             _persistence.Save(deviceUsage);
 
             // Act
@@ -146,26 +145,5 @@ namespace TrackerLibTests
             // Assert
             Assert.Empty(fetchedDeviceUsages);
         }
-
-        private static DeviceUsage MakeTestDeviceUsage(string participantIdentifier = "TestId")
-        {
-            return MakeTestDeviceUsage(participantIdentifier, DateTimeOffset.Now);
-        }
-
-        private static DeviceUsage MakeTestDeviceUsage(string participantIdentifier, DateTimeOffset timeStamp)
-        {
-            return new DeviceUsage(participantIdentifier, "TestDevice", timeStamp, 1, EventType.Started);
-        }
-
-        private static AppUsage MakeTestAppUsage(string participantIdentifier = "TestId")
-        {
-            return MakeTestAppUsage(participantIdentifier, DateTimeOffset.Now);
-        }
-
-        private static AppUsage MakeTestAppUsage(string participantIdentifier, DateTimeOffset timeStamp)
-        {
-            return new AppUsage(participantIdentifier, "TestDevice", timeStamp, 1, "TestPackage", 100);
-        }
-
     }
 }

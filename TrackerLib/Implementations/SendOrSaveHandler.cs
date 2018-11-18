@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
 using TrackerLib.Enums;
@@ -11,16 +10,14 @@ namespace TrackerLib.Implementations
         private readonly ILogger _logger;
         private readonly IPersistence _persistence;
         private readonly IRequests _requests;
-        private readonly ISettings _settings;
 
         private readonly Credentials _credentials;
 
         public SendOrSaveHandler(ILogger logger, IPersistence persistence, IRequests requests, ISettings settings)
         {
-            this._logger = logger;
-            this._persistence = persistence;
-            this._requests = requests;
-            this._settings = settings;
+            _logger = logger;
+            _persistence = persistence;
+            _requests = requests;
 
             _credentials = settings.Credentials;
         }

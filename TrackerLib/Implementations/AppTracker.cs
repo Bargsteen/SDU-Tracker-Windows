@@ -1,28 +1,25 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using TrackerLib.Constants;
 using TrackerLib.Interfaces;
-using TrackerLib.Models;
 
 namespace TrackerLib.Implementations
 {
     public class AppTracker : IAppTracker
     {
         private readonly IActiveWindowHandler _activeWindowHandler;
-        private readonly IDateTimeHandler _dateTimeHandler;
         private readonly ISendOrSaveHandler _sendOrSaveHandler;
-        private readonly ISettings _settings;
         private readonly ISleepHandler _sleepHandler;
+        private readonly IUsageBuilder _usageBuilder;
 
         private Thread _trackingThread;
 
-        public AppTracker(IActiveWindowHandler activeWindowHandler, IDateTimeHandler dateTimeHandler, ISendOrSaveHandler sendOrSaveHandler, ISettings settings, ISleepHandler sleepHandler)
+        public AppTracker(IActiveWindowHandler activeWindowHandler, ISendOrSaveHandler sendOrSaveHandler, 
+            ISleepHandler sleepHandler, IUsageBuilder usageBuilder)
         {
             _activeWindowHandler = activeWindowHandler;
-            _dateTimeHandler = dateTimeHandler;
             _sendOrSaveHandler = sendOrSaveHandler;
-            _settings = settings;
             _sleepHandler = sleepHandler;
+            _usageBuilder = usageBuilder;
         }
 
         public void StartTracking()
@@ -43,13 +40,9 @@ namespace TrackerLib.Implementations
             _trackingThread.Start();
         }
 
-        private AppUsage MakeAppUsage(string package, int duration)
+        public void StopTracking()
         {
-            string participantIdentifier = _settings.ParticipantIdentifier;
-            string deviceModelName = _settings.DeviceModelName;
-            var timeStamp = _dateTimeHandler.CurrentTime;
-            int userCount = _settings.UserCount;
-            return new AppUsage(participantIdentifier, deviceModelName, timeStamp, userCount, package, duration);
+            // Nothing needs to be done.
         }
 
         private void SendOrSaveIfAppHasChanged()
@@ -58,8 +51,7 @@ namespace TrackerLib.Implementations
 
             if (lastActiveWindow != null)
             {
-                int duration = (int)Math.Round((lastActiveWindow.EndTime - lastActiveWindow.StartTime).TotalMilliseconds);
-                var newAppUsage = MakeAppUsage(lastActiveWindow.Identifier, duration);
+                var newAppUsage = _usageBuilder.MakeAppUsage(lastActiveWindow);
 
                 _sendOrSaveHandler.SendOrSaveUsage(newAppUsage);
             }

@@ -39,7 +39,7 @@ namespace Tracker
         public void RemoveUser(string nameOfUser)
         {
             _settings?.UserList.Remove(nameOfUser);
-            _settings.Save();
+            _settings?.Save();
         }
 
         public int UserCount => _settings.UserList?.Count ?? 1;

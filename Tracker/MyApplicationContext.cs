@@ -4,41 +4,37 @@ using TrackerLib.Interfaces;
 
 namespace Tracker
 {
-    class MyApplicationContext : ApplicationContext
+    internal class MyApplicationContext : ApplicationContext
     {
         private NotifyIcon _trayIcon;
-        private IAppTracker _appTrackingHandler;
 
-        public MyApplicationContext(IAppTracker appTrackingHandler)
+        private readonly IRunner _runner;
+
+        public MyApplicationContext(IRunner runner)
         {
-            this._appTrackingHandler = appTrackingHandler;
+            _runner = runner;
+            _runner.Run();
 
+            SetupMenu();
+        }
+
+        private void SetupMenu()
+        {
             _trayIcon = new NotifyIcon()
             {
                 Icon = Properties.Resources.AppIcon,
 
-                ContextMenu = new ContextMenu(new MenuItem[]
+                ContextMenu = new ContextMenu(new[]
                 {
-                    new MenuItem("Start tracking", StartTracking),
-                    new MenuItem("Stop tracking", StopTracking),
                     new MenuItem("Exit", Exit)
                 }),
                 Visible = true
             };
         }
 
-        private void StartTracking(object sender, EventArgs e)
-        {
-            _appTrackingHandler.StartTracking();
-        }
-
-        private void StopTracking(object sender, EventArgs e)
-        {
-        }
-
-
         private void Exit(object sender, EventArgs e)
         {
+            _runner.Terminate();
             _trayIcon.Visible = false;
 
             Application.Exit();

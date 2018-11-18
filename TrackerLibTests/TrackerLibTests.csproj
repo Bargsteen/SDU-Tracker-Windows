@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TrackerLib\TrackerLib.csproj" />
+    <ProjectReference Include="..\Tracker\Tracker.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -49,21 +49,6 @@
     <Reference Include="Microsoft.Data.Sqlite, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Sqlite.Core.2.1.0\lib\netstandard2.0\Microsoft.Data.Sqlite.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Abstractions, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Abstractions.2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Design, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Design.2.1.4\lib\net461\Microsoft.EntityFrameworkCore.Design.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Sqlite, Version=2.1.4.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Sqlite.Core.2.1.4\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Sqlite.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
     </Reference>
@@ -99,12 +84,6 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Realm, Version=3.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Realm.Database.3.2.1\lib\netstandard1.4\Realm.dll</HintPath>
-    </Reference>
-    <Reference Include="Realm.DataBinding, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Realm.DataBinding.1.2.0\lib\netstandard1.0\Realm.DataBinding.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
@@ -168,16 +147,19 @@
   <ItemGroup>
     <Compile Include="ActiveProcess.cs" />
     <Compile Include="ActiveWindowHandler.cs" />
+    <Compile Include="AlertHandler.cs" />
     <Compile Include="AppWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AppWindow.Designer.cs">
       <DependentUpon>AppWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="LaunchAtLoginHandler.cs" />
     <Compile Include="MyApplicationContext.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SystemEventService.cs" />
     <EmbeddedResource Include="AppWindow.resx">
       <DependentUpon>AppWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -211,7 +193,6 @@
   <ItemGroup>
     <None Include="SDU_Icon_512_White.ico" />
     <None Include="Resources\AppIcon.ico" />
-    <Content Include="SDU_Icon 256.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrackerLib\TrackerLib.csproj">

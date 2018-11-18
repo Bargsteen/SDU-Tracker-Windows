@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
@@ -10,7 +10,6 @@ namespace TrackerLib.Implementations
 {
     public class Persistence : IPersistence
     {
-        private readonly bool _useInMemoryDatabase;
         private readonly DbContextOptions<UsageContext> _options;
 
         public Persistence()
@@ -19,7 +18,8 @@ namespace TrackerLib.Implementations
             EnsureDatabaseIsCreated();
         }
 
-        public Persistence(SqliteConnection connection)
+        // Used for testing
+        public Persistence(DbConnection connection)
         {
             _options = new DbContextOptionsBuilder<UsageContext>()
                 .UseSqlite(connection)

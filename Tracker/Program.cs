@@ -1,9 +1,9 @@
 ﻿using SimpleInjector;
 using System;
 using System.Windows.Forms;
+using TrackerLib.Enums;
 using TrackerLib.Implementations;
 using TrackerLib.Interfaces;
-using TrackerLib.Models;
 
 namespace Tracker
 {
@@ -13,44 +13,64 @@ namespace Tracker
 
         static Program()
         {
-            Container = new Container();
-            Container.Register<ISettings, Settings>(Lifestyle.Singleton);
-            Container.Register<ILogger, Logger>(Lifestyle.Singleton);
-            Container.Register<IActiveWindowHandler, ActiveWindowHandler>();
-            Container.RegisterInstance(GetPersistence());
-            Container.Register<ISendOrSaveHandler, SendOrSaveHandler>();
-            Container.Register<IAppTracker, AppTracker>();
-            Container.Register<IRequests, Requests>();
-            Container.Register<IDateTimeHandler, DateTimeHandler>();
+            Container = GetContainer();
         }
 
-        static IPersistence GetPersistence()
-        {
-            return new Persistence();
-        }
-
+      
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main()
         {
-            //var appTrackingHandler = Container.GetInstance<IAppTracker>();
-            //appTrackingHandler.StartTracking();
-            var persistence = Container.GetInstance<IPersistence>();
-            var appUsage = new AppUsage("parti", "mbp", DateTimeOffset.Now, 1, "package", 1);
 
-            //persistence.Save(appUsage);
+            var runner = Container.GetInstance<IRunner>();
 
-            var fetchedUsages = persistence.FetchAppUsages(upTo: 10);
-
-            fetchedUsages.ForEach(Console.WriteLine);
-            
-
-            /*
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MyApplicationContext(appTrackingHandler));*/
+            Application.Run(new MyApplicationContext(runner));
+        }
+
+        
+
+        private static Container GetContainer()
+        {
+            var container = new Container();
+
+            //container.Register<ISettings, Settings>(Lifestyle.Singleton);
+            container.RegisterInstance(GetSettings());
+            container.Register<ILogger, Logger>(Lifestyle.Singleton);
+            container.Register<IActiveWindowHandler, ActiveWindowHandler>();
+            container.RegisterInstance(GetPersistence());
+            container.Register<ISendOrSaveHandler, SendOrSaveHandler>();
+            container.Register<IAppTracker, AppTracker>();
+            container.Register<IRequests, Requests>();
+            container.Register<IDateTimeHandler, DateTimeHandler>();
+            container.Register<IRunner, Runner>();
+            container.Register<ISleepHandler, SleepHandler>();
+            container.Register<ISystemEventService, SystemEventService>();
+            container.Register<IDeviceTracker, DeviceTracker>();
+            container.Register<IAlertHandler, AlertHandler>();
+            container.Register<IUsageBuilder, UsageBuilder>();
+            container.Register<ILaunchAtLoginHandler, LaunchAtLoginHandler>();
+            container.Register<IUserHandler, UserHandler>();
+            container.Register<IResendHandler, ResendHandler>();
+
+            return container;
+        }
+
+        private static IPersistence GetPersistence()
+        {
+            return new Persistence();
+        }
+
+        private static ISettings GetSettings()
+        {
+            return new Settings()
+            {
+                AppHasBeenSetup = true, CurrentUser = "Kasper", StopTrackingDate = DateTimeOffset.MaxValue,
+                TrackingType = TrackingType.AppAndDevice, UserId = "Bargsteen"
+            };
         }
     }
 }

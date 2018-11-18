@@ -3,5 +3,6 @@
     public interface ITracker
     {
         void StartTracking();
+        void StopTracking();
     }
 }
