@@ -31,17 +31,24 @@ namespace Tracker.Implementations
             set
             {
                 string previousParticipantIdentifier = ParticipantIdentifier;
+                string previousCurrentUser = CurrentUser;
 
                 _settings.CurrentUser = value;
                 _settings.Save();
 
                 string newParticipantIdentifier = ParticipantIdentifier;
+                string newCurrentUser = CurrentUser;
+
                 OnParticipantIdentifierChanged
                     ?.Invoke(this, new ParticipantIdentifierChangedEventArgs(previousParticipantIdentifier, newParticipantIdentifier));
+
+                OnCurrentUserChanged
+                    ?.Invoke(this, new CurrentUserChangedEventArgs(previousCurrentUser, newCurrentUser));
             }
         }
 
         public event ParticipantIdentifierChangedHandler OnParticipantIdentifierChanged;
+        public event CurrentUserChangedHandler OnCurrentUserChanged;
 
         public string DeviceModelName => Environment.MachineName;
 

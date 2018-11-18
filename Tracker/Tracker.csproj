@@ -160,7 +160,7 @@
       <DependentUpon>UserWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Implementations\LaunchAtLoginService.cs" />
-    <Compile Include="MyApplicationContext.cs" />
+    <Compile Include="TrackerApplicationContext.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Implementations\Settings.cs" />

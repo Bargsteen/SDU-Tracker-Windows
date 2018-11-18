@@ -27,10 +27,9 @@ namespace Tracker
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var runner = Container.GetInstance<IRunner>();
-            var userWindow = Container.GetInstance<IUserWindow>();
-
-            Application.Run(new MyApplicationContext(runner, userWindow));
+            var trackerApplicationContext = Container.GetInstance<TrackerApplicationContext>();
+            
+            Application.Run(trackerApplicationContext);
         }
 
         
@@ -58,6 +57,7 @@ namespace Tracker
             container.Register<IUserService, UserService>();
             container.Register<IResendService, ResendService>();
             container.Register<IUserWindow, UserWindow>();
+            container.Register<TrackerApplicationContext>();
 
             return container;
         }

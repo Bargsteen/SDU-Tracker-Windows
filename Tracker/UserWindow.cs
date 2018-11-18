@@ -25,6 +25,8 @@ namespace Tracker
 
         private void UserWindowLoaded(object sender, System.EventArgs e)
         {
+            CenterToScreen();
+
             _settings.Users.ForEach(Console.WriteLine);
             Console.WriteLine($"Current: {_settings.CurrentUser}");
 

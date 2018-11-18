@@ -15,6 +15,7 @@ namespace TrackerLib.Interfaces
         string CurrentUser { get; set; }
 
         event ParticipantIdentifierChangedHandler OnParticipantIdentifierChanged;
+        event CurrentUserChangedHandler OnCurrentUserChanged;
 
         string DeviceModelName { get; }
 

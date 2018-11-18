@@ -14,6 +14,7 @@ namespace Tracker
 
         private void CreateUserWindowLoad(object sender, System.EventArgs e)
         {
+            CenterToScreen();
             NameOfNewUser = "";
             NewUserTextField.Clear();
             CreateButton.Enabled = false;

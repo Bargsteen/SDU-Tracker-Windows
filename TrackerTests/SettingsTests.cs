@@ -76,5 +76,32 @@ namespace TrackerTests
             Assert.Equal(expectedPreviousParticipantIdentifier, actualPreviousParticipantIdentifier);
             Assert.Equal(expectedNewParticipantIdentIdentifier, actualNewParticipantIdentifier);
         }
+
+        [Fact]
+        public void OnUserChanged__ChangeCurrentUser__InvokesEventWithCorrectArgs()
+        {
+            // Arrange
+            const string expectedPreviousCurrentUser = "TestPreviousCurrentUser";
+            const string expectedNewCurrentUser = "TestNewCurrentUser";
+
+            _settings.CurrentUser = expectedPreviousCurrentUser;
+
+            string actualPreviousCurrentUser = "";
+            string actualNewCurrentUser = "";
+
+            _settings.OnCurrentUserChanged += (sender, args) =>
+            {
+                actualPreviousCurrentUser = args.PreviousCurrentUser;
+                actualNewCurrentUser = args.NewCurrentUser;
+            };
+
+
+            // Act
+            _settings.CurrentUser = expectedNewCurrentUser;
+
+            // Assert
+            Assert.Equal(expectedPreviousCurrentUser, actualPreviousCurrentUser);
+            Assert.Equal(expectedNewCurrentUser, actualNewCurrentUser);
+        }
     }
 }
