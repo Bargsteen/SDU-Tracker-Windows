@@ -9,28 +9,37 @@ namespace Tracker
         private NotifyIcon _trayIcon;
 
         private readonly IRunner _runner;
+        private readonly IUserWindow _userWindow;
 
-        public MyApplicationContext(IRunner runner)
+        public MyApplicationContext(IRunner runner, IUserWindow userWindow)
         {
             SetupMenu();
             Application.ApplicationExit += OnApplicationExit;
 
             _runner = runner;
+            _userWindow = userWindow;
+
             _runner.Run();
         }
 
         private void SetupMenu()
         {
-            _trayIcon = new NotifyIcon()
+            _trayIcon = new NotifyIcon
             {
                 Icon = Properties.Resources.AppIcon,
 
                 ContextMenu = new ContextMenu(new[]
                 {
-                    new MenuItem("Exit", Exit)
+                    new MenuItem("Vælg bruger", OpenUserMenuClicked), 
+                    new MenuItem("Afslut", Exit)
                 }),
                 Visible = true
             };
+        }
+
+        private void OpenUserMenuClicked(object sender, EventArgs args)
+        {
+            _userWindow.ShowWindow();
         }
 
         private void Exit(object sender, EventArgs e)

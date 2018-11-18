@@ -21,27 +21,7 @@ namespace Tracker.Implementations
             }
         }
 
-        public List<string> Users => _settings?.UserList ?? new List<string>();
-
-        public void AddUser(string nameOfUser)
-        {
-            if(_settings.UserList == null)
-            {
-                _settings.UserList = new List<string>();
-            }
-
-            if (!_settings.UserList.Contains(nameOfUser))
-            {
-                _settings.UserList.Add(nameOfUser);
-                _settings.Save();
-            }
-        }
-
-        public void RemoveUser(string nameOfUser)
-        {
-            _settings?.UserList.Remove(nameOfUser);
-            _settings?.Save();
-        }
+        public List<string> Users { get; set; } = new List<string>();
 
         public int UserCount => _settings.UserList?.Count ?? 1;
 

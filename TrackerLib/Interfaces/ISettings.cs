@@ -10,9 +10,7 @@ namespace TrackerLib.Interfaces
     {
         bool AppHasBeenSetup { get; set; }
 
-        List<string> Users { get;}
-        void AddUser(string nameOfUser);
-        void RemoveUser(string nameOfUser);
+        List<string> Users { get; set; }
         int UserCount { get; }
         string CurrentUser { get; set; }
 

@@ -24,12 +24,13 @@ namespace Tracker
         [STAThread]
         private static void Main()
         {
-
-            var runner = Container.GetInstance<IRunner>();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MyApplicationContext(runner));
+
+            var runner = Container.GetInstance<IRunner>();
+            var userWindow = Container.GetInstance<IUserWindow>();
+
+            Application.Run(new MyApplicationContext(runner, userWindow));
         }
 
         
@@ -56,6 +57,7 @@ namespace Tracker
             container.Register<ILaunchAtLoginService, LaunchAtLoginService>();
             container.Register<IUserService, UserService>();
             container.Register<IResendService, ResendService>();
+            container.Register<IUserWindow, UserWindow>();
 
             return container;
         }
@@ -65,13 +67,19 @@ namespace Tracker
             return new Persistence();
         }
 
+        private static readonly ISettings Settings = new Settings()
+        {
+            AppHasBeenSetup = true,
+            CurrentUser = "Kasper",
+            StopTrackingDate = DateTimeOffset.MaxValue,
+            TrackingType = TrackingType.AppAndDevice,
+            UserId = "Bargsteen",
+            Users = { "Kasper", "Kasper2", "Kasper3" }
+        };
+
         private static ISettings GetSettings()
         {
-            return new Settings()
-            {
-                AppHasBeenSetup = true, CurrentUser = "Kasper", StopTrackingDate = DateTimeOffset.MaxValue,
-                TrackingType = TrackingType.AppAndDevice, UserId = "Bargsteen"
-            };
+            return Settings;
         }
     }
 }
