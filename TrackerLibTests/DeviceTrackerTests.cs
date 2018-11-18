@@ -1,5 +1,7 @@
 using System;
 using Moq;
+using TrackerLib.Enums;
+using TrackerLib.Events;
 using TrackerLib.Implementations;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
@@ -11,24 +13,27 @@ namespace TrackerLibTests
     {
         private readonly IDeviceTracker _deviceTracker;
 
-        private readonly Mock<ISendOrSaveService> _sendOrSaveHandler;
+        private readonly Mock<ISendOrSaveService> _sendOrSaveService;
         private readonly Mock<ISystemEventService> _systemEventService;
+        private readonly Mock<ISettings> _settings;
 
         public DeviceTrackerTests()
         {
-            _sendOrSaveHandler = new Mock<ISendOrSaveService>();
+            _sendOrSaveService = new Mock<ISendOrSaveService>();
             _systemEventService = new Mock<ISystemEventService>();
+            _settings = new Mock<ISettings>();
+
             var usageBuilder = new Mock<IUsageBuilder>();
 
-            usageBuilder.Setup(u => u.MakeDeviceUsage(EventType.Started))
-                .Returns(TestHelper.MakeTestDeviceUsage(EventType.Started));
+            usageBuilder.Setup(u => u.MakeDeviceUsage(It.IsAny<EventType>()))
+                .Returns((EventType eventType) => TestHelper.MakeTestDeviceUsage(eventType));
 
-            usageBuilder.Setup(u => u.MakeDeviceUsage(EventType.Ended))
-                .Returns(TestHelper.MakeTestDeviceUsage(EventType.Ended));
-
+            usageBuilder.Setup(u => u.MakeDeviceUsage(It.IsAny<EventType>(), It.IsAny<string>()))
+                .Returns((EventType eventType, string participantId) 
+                    => TestHelper.MakeTestDeviceUsage(eventType, participantId));
 
             _deviceTracker =
-                new DeviceTracker(_sendOrSaveHandler.Object, _systemEventService.Object, usageBuilder.Object);
+                new DeviceTracker(_sendOrSaveService.Object, _settings.Object, _systemEventService.Object, usageBuilder.Object);
         }
 
         public void Dispose()
@@ -75,9 +80,24 @@ namespace TrackerLibTests
             VerifyDeviceUsageSentXTimes(EventType.Started, Times.Exactly(2));
         }
 
-        //[Fact]
+        [Fact]
         public void StartTracking__CurrentUserChanges__SendsDeviceEndAndStart()
         {
+            // Arrange
+            const string previousParticipantId = "PreviousParticipantId";
+            const string newParticipantId = "NewParticipantId";
+            _settings.SetupGet(s => s.ParticipantIdentifier).Returns(previousParticipantId);
+            _deviceTracker.StartTracking();
+            
+            // Act
+            _settings.Raise(s => s.OnParticipantIdentifierChanged += null, 
+               new ParticipantIdentifierChangedEventArgs(previousParticipantId, newParticipantId));
+
+            // Assert
+
+            // Should check participantIdentifier to be thorough.
+            VerifyDeviceUsageSentXTimes(EventType.Started, Times.Exactly(2)); // Once for StartTracking, once for Event
+            VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Once()); // Once for event
         }
 
 
@@ -116,8 +136,15 @@ namespace TrackerLibTests
 
         private void VerifyDeviceUsageSentXTimes(EventType eventType, Times times)
         {
-            _sendOrSaveHandler.Verify(s =>
+            _sendOrSaveService.Verify(s =>
                 s.SendOrSaveUsage(It.Is<DeviceUsage>(u => u.EventType == eventType.GetHashCode()), false), times);
+        }
+
+        private void VerifyDeviceUsageForParticipantIdSentXTimes(string participantId, EventType eventType, Times times)
+        {
+            _sendOrSaveService.Verify(s => s.SendOrSaveUsage(It.Is<DeviceUsage>(u => u.EventType == eventType.GetHashCode() 
+                                                                                     && u.ParticipantIdentifier == participantId), false), 
+                                                                                     times);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TrackerLib.Models;
 using TrackerLib.Enums;
+using TrackerLib.Events;
 
 namespace TrackerLib.Interfaces
 {
@@ -15,7 +16,7 @@ namespace TrackerLib.Interfaces
         int UserCount { get; }
         string CurrentUser { get; set; }
 
-
+        event ParticipantIdentifierChangedHandler OnParticipantIdentifierChanged;
 
         string DeviceModelName { get; }
 

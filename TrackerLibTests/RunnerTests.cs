@@ -14,19 +14,19 @@ namespace TrackerLibTests
     {
         public RunnerTests()
         {
-            _alertHandler = new Mock<IAlertService>();
+            _alertService = new Mock<IAlertService>();
             _appTracker = new Mock<IAppTracker>();
-            _dateTimeHandler = new Mock<IDateTimeService>();
+            _dateTimeService = new Mock<IDateTimeService>();
             _deviceTracker = new Mock<IDeviceTracker>();
-            _launchAtLoginHandler = new Mock<ILaunchAtLoginService>();
+            _launchAtLoginService = new Mock<ILaunchAtLoginService>();
             _logger = new Mock<ILogger>();
             _settings = new Mock<ISettings>();
-            _resendHandler = new Mock<IResendService>();
-            _userHandler = new Mock<IUserService>();
+            _resendService = new Mock<IResendService>();
+            _userService = new Mock<IUserService>();
 
-            _runner = new Runner(_alertHandler.Object, _appTracker.Object, _dateTimeHandler.Object,
-                _deviceTracker.Object, _launchAtLoginHandler.Object, _logger.Object, 
-                _resendHandler.Object, _settings.Object, _userHandler.Object);
+            _runner = new Runner(_alertService.Object, _appTracker.Object, _dateTimeService.Object,
+                _deviceTracker.Object, _launchAtLoginService.Object, _logger.Object, 
+                _resendService.Object, _settings.Object, _userService.Object);
         }
 
         public void Dispose()
@@ -36,15 +36,15 @@ namespace TrackerLibTests
 
         private readonly IRunner _runner;
 
-        private readonly Mock<IAlertService> _alertHandler;
+        private readonly Mock<IAlertService> _alertService;
         private readonly Mock<IAppTracker> _appTracker;
-        private readonly Mock<IDateTimeService> _dateTimeHandler;
+        private readonly Mock<IDateTimeService> _dateTimeService;
         private readonly Mock<IDeviceTracker> _deviceTracker;
-        private readonly Mock<ILaunchAtLoginService> _launchAtLoginHandler;
+        private readonly Mock<ILaunchAtLoginService> _launchAtLoginService;
         private readonly Mock<ILogger> _logger;
         private readonly Mock<ISettings> _settings;
-        private readonly Mock<IResendService> _resendHandler;
-        private readonly Mock<IUserService> _userHandler;
+        private readonly Mock<IResendService> _resendService;
+        private readonly Mock<IUserService> _userService;
 
         [Fact]
         public void Run__IsSetup_TrackingDateNotReached_AppAndDeviceTracking__StartsTrackingBoth()
@@ -90,7 +90,7 @@ namespace TrackerLibTests
             _runner.Run();
 
             // Assert
-            _resendHandler.Verify(r => r.StartPeriodicResendingOfSavedUsages(), Times.Once);
+            _resendService.Verify(r => r.StartPeriodicResendingOfSavedUsages(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
@@ -99,15 +99,15 @@ namespace TrackerLibTests
             // Arrange
             _settings.Setup(s => s.AppHasBeenSetup).Returns(true);
             _settings.Setup(s => s.StopTrackingDate).Returns(DateTimeOffset.MinValue);
-            _dateTimeHandler.Setup(d => d.CurrentTime).Returns(DateTimeOffset.MaxValue);
+            _dateTimeService.Setup(d => d.CurrentTime).Returns(DateTimeOffset.MaxValue);
 
             // Act
             _runner.Run();
 
             // Assert
-            _alertHandler.Verify(a => a.ShowAlert(AlertsConstants.TrackingHasEndedTitle, AlertsConstants.TrackingHasEndedMessage, 
+            _alertService.Verify(a => a.ShowAlert(AlertsConstants.TrackingHasEndedTitle, AlertsConstants.TrackingHasEndedMessage, 
                 AlertsConstants.OkButtonText, AlertsConstants.LongAlertTime));
-            _launchAtLoginHandler.VerifySet(l => l.LaunchAtLoginIsEnabled = false);
+            _launchAtLoginService.VerifySet(l => l.LaunchAtLoginIsEnabled = false);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace TrackerLibTests
             _runner.Run();
 
             // Assert
-            _alertHandler.Verify(a => a.ShowAlert(AlertsConstants.ReadyForSetupTitle, AlertsConstants.ReadyForSetupMessage, 
+            _alertService.Verify(a => a.ShowAlert(AlertsConstants.ReadyForSetupTitle, AlertsConstants.ReadyForSetupMessage, 
                 AlertsConstants.OkButtonText, AlertsConstants.LongAlertTime));
         }
 

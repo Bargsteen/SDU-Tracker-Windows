@@ -11,17 +11,17 @@ namespace TrackerLibTests
     public class AppTrackerTests : IDisposable
     {
         private readonly IAppTracker _appTracker;
-        private readonly Mock<IActiveWindowService> _activeWindowHandler;
-        private readonly Mock<ISendOrSaveService> _sendOrSaveHandler;
+        private readonly Mock<IActiveWindowService> _activeWindowService;
+        private readonly Mock<ISendOrSaveService> _sendOrSaveService;
 
         public AppTrackerTests()
         {
-            _activeWindowHandler = new Mock<IActiveWindowService>();
-            _sendOrSaveHandler = new Mock<ISendOrSaveService>();
-            var sleepHandler = new Mock<ISleepService>();
+            _activeWindowService = new Mock<IActiveWindowService>();
+            _sendOrSaveService = new Mock<ISendOrSaveService>();
+            var sleepService = new Mock<ISleepService>();
             var usageBuilder = new Mock<IUsageBuilder>();
 
-            _appTracker = new AppTracker(_activeWindowHandler.Object, _sendOrSaveHandler.Object, sleepHandler.Object,
+            _appTracker = new AppTracker(_activeWindowService.Object, _sendOrSaveService.Object, sleepService.Object,
                 usageBuilder.Object);
         }
 
@@ -34,7 +34,7 @@ namespace TrackerLibTests
         public void StartTracking__ActiveWindowChanged__SendsAppUsage()
         {
             // Arrange
-            _activeWindowHandler.Setup(a => a.MaybeGetLastActiveWindow())
+            _activeWindowService.Setup(a => a.MaybeGetLastActiveWindow())
                 .Returns(new ActiveWindow("Test", DateTimeOffset.Now));
 
             // Act
@@ -45,21 +45,21 @@ namespace TrackerLibTests
             Thread.Sleep(100); 
 
             // Assert
-            _sendOrSaveHandler.Verify(s => s.SendOrSaveUsage(It.IsAny<AppUsage>(), false));
+            _sendOrSaveService.Verify(s => s.SendOrSaveUsage(It.IsAny<AppUsage>(), false));
         }
 
         [Fact]
         public void Initialized__ActiveWindowChanged__DoesNothing()
         {
             // Arrange
-            _activeWindowHandler.Setup(a => a.MaybeGetLastActiveWindow())
+            _activeWindowService.Setup(a => a.MaybeGetLastActiveWindow())
                 .Returns(new ActiveWindow("Test", DateTimeOffset.Now));
 
             // Act
             // Being Initialized
 
             // Assert
-            _sendOrSaveHandler.Verify(s => s.SendOrSaveUsage(It.IsAny<AppUsage>(), false), Times.Never);
+            _sendOrSaveService.Verify(s => s.SendOrSaveUsage(It.IsAny<AppUsage>(), false), Times.Never);
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IResendService
     {
-        void StartPeriodicResendingOfSavedUsages();
+        void StartPeriodicResendingOfSavedUsages(int intervalInSeconds, int limitOfEachUsage);
     }
 }

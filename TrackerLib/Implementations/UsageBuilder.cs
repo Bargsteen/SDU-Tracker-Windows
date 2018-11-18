@@ -1,4 +1,5 @@
 ﻿using System;
+using TrackerLib.Enums;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
 
@@ -17,7 +18,13 @@ namespace TrackerLib.Implementations
 
         public DeviceUsage MakeDeviceUsage(EventType eventType)
         {
-            return new DeviceUsage(_settings.ParticipantIdentifier, _settings.DeviceModelName, 
+            return new DeviceUsage(_settings.ParticipantIdentifier, _settings.DeviceModelName,
+                _dateTimeService.CurrentTime, _settings.UserCount, eventType);
+        }
+
+        public DeviceUsage MakeDeviceUsage(EventType eventType, string participantIdentifier)
+        {
+            return new DeviceUsage(participantIdentifier, _settings.DeviceModelName,
                 _dateTimeService.CurrentTime, _settings.UserCount, eventType);
         }
 

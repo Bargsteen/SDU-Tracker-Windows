@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using TrackerLib.Enums;
 
 namespace TrackerLib.Models
 {

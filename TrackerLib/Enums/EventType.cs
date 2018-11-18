@@ -1,4 +1,4 @@
-﻿namespace TrackerLib.Models
+﻿namespace TrackerLib.Enums
 {
     public enum EventType
     {

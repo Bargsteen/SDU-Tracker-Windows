@@ -75,8 +75,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LaunchAtLoginHandlerTests.cs" />
+    <Compile Include="LaunchAtLoginServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

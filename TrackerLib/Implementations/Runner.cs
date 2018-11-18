@@ -47,7 +47,7 @@ namespace TrackerLib.Implementations
                 {
                     _userService.CheckIfUserHasChanged();
 
-                    _resendService.StartPeriodicResendingOfSavedUsages();
+                    _resendService.StartPeriodicResendingOfSavedUsages(TrackingConstants.SecondsBetweenResendChecks, TrackingConstants.LimitOfEachUsage);
 
                     if (_settings.TrackingType == TrackingType.AppAndDevice)
                     {

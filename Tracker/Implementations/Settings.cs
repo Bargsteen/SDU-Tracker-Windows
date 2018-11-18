@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TrackerLib.Enums;
+using TrackerLib.Events;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
 
@@ -49,10 +50,18 @@ namespace Tracker.Implementations
             get => _settings?.CurrentUser ?? "ukendt-bruger";
             set
             {
+                string previousParticipantIdentifier = ParticipantIdentifier;
+
                 _settings.CurrentUser = value;
                 _settings.Save();
+
+                string newParticipantIdentifier = ParticipantIdentifier;
+                OnParticipantIdentifierChanged
+                    ?.Invoke(this, new ParticipantIdentifierChangedEventArgs(previousParticipantIdentifier, newParticipantIdentifier));
             }
         }
+
+        public event ParticipantIdentifierChangedHandler OnParticipantIdentifierChanged;
 
         public string DeviceModelName => Environment.MachineName;
 

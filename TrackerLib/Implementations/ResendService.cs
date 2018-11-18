@@ -1,12 +1,28 @@
-﻿using TrackerLib.Interfaces;
+﻿using System.Threading;
+using TrackerLib.Interfaces;
 
 namespace TrackerLib.Implementations
 {
     public class ResendService : IResendService
     {
-        public void StartPeriodicResendingOfSavedUsages()
+        private readonly ISendOrSaveService _sendOrSaveService;
+        private readonly ISleepService _sleepService;
+
+        public ResendService(ISendOrSaveService sendOrSaveService, ISleepService sleepService)
         {
-            //throw new System.NotImplementedException();
+            _sendOrSaveService = sendOrSaveService;
+            _sleepService = sleepService;
+        }
+
+
+        public void StartPeriodicResendingOfSavedUsages(int intervalInSeconds, int limitOfEachUsage)
+        {
+            var thread = new Thread(() =>
+            {
+                _sendOrSaveService.SendSomeUsagesFromPersistence(limitOfEachUsage);
+                _sleepService.SleepFor(intervalInSeconds);
+            });
+            thread.Start();
         }
     }
 }

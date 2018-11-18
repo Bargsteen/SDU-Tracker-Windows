@@ -6,11 +6,11 @@ using Xunit;
 
 namespace TrackerTests
 {
-    public class LaunchAtLoginHandlerTests : IDisposable
+    public class LaunchAtLoginServiceTests : IDisposable
     {
         private ILaunchAtLoginService _launchAtLoginService;
 
-        public LaunchAtLoginHandlerTests()
+        public LaunchAtLoginServiceTests()
         {
             _launchAtLoginService = new LaunchAtLoginService();
         }
