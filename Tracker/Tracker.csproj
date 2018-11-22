@@ -163,6 +163,7 @@
     </Compile>
     <Compile Include="Implementations\ActiveWindowService.cs" />
     <Compile Include="Implementations\AlertService.cs" />
+    <Compile Include="Implementations\SetupService.cs" />
     <Compile Include="UserWindow.cs">
       <SubType>Form</SubType>
     </Compile>
