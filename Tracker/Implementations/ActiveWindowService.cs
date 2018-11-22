@@ -67,11 +67,6 @@ namespace Tracker.Implementations
                 .LastOrDefault()?
                 .Trim();
 
-            if (processName == "ApplicationFrameHost")
-            {
-                var a = 2;
-            }
-
             if (!string.IsNullOrEmpty(cleanedWindowName))
             {
                 identifier += $" - {cleanedWindowName}";
