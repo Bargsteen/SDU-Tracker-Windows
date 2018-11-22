@@ -39,12 +39,15 @@ namespace TrackerLib.Implementations
             {
                 _logger.LogInfo(LoggerConstants.AppHasNotBeenSetupText);
                 _alertService.ShowAlert(AlertsConstants.ReadyForSetupTitle, AlertsConstants.ReadyForSetupMessage,
-                    AlertsConstants.OkButtonText, AlertsConstants.LongAlertTime);
+                    AlertsConstants.OkButtonText);
             }
             else
             {
                 if (_dateTimeService.CurrentTime <= _settings.StopTrackingDate)
                 {
+                    // TODO: Should be done in setup instead.
+                    _launchAtLoginService.LaunchAtLoginIsEnabled = true;
+
                     _userService.CheckIfUserHasChanged();
 
                     _resendService.StartPeriodicResendingOfSavedUsages(TrackingConstants.SecondsBetweenResendChecks, TrackingConstants.LimitOfEachUsage);
@@ -63,8 +66,7 @@ namespace TrackerLib.Implementations
                 {
                     _launchAtLoginService.LaunchAtLoginIsEnabled = false;
                     _alertService.ShowAlert(AlertsConstants.TrackingHasEndedTitle,
-                        AlertsConstants.TrackingHasEndedMessage, AlertsConstants.OkButtonText,
-                        AlertsConstants.LongAlertTime);
+                        AlertsConstants.TrackingHasEndedMessage, AlertsConstants.OkButtonText);
                 }
             }
         }

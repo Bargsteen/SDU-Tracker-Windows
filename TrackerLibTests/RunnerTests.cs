@@ -106,7 +106,7 @@ namespace TrackerLibTests
 
             // Assert
             _alertService.Verify(a => a.ShowAlert(AlertsConstants.TrackingHasEndedTitle, AlertsConstants.TrackingHasEndedMessage, 
-                AlertsConstants.OkButtonText, AlertsConstants.LongAlertTime));
+                AlertsConstants.OkButtonText));
             _launchAtLoginService.VerifySet(l => l.LaunchAtLoginIsEnabled = false);
         }
 
@@ -121,7 +121,7 @@ namespace TrackerLibTests
 
             // Assert
             _alertService.Verify(a => a.ShowAlert(AlertsConstants.ReadyForSetupTitle, AlertsConstants.ReadyForSetupMessage, 
-                AlertsConstants.OkButtonText, AlertsConstants.LongAlertTime));
+                AlertsConstants.OkButtonText));
         }
 
         [Fact]
