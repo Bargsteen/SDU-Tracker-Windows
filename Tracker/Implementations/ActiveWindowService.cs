@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
@@ -17,38 +18,65 @@ namespace Tracker.Implementations
         public ActiveWindow MaybeGetLastActiveWindow()
         {
             var activeProcess = GetActiveProcess();
-            if (activeProcess != null)
+
+            if (activeProcess == null) return null;
+
+            var now = DateTimeOffset.UtcNow;
+            string activeProcessIdentifier = GetIdentifier(activeProcess);
+
+            if (_currentActiveWindow != null)
             {
-                var now = DateTimeOffset.UtcNow;
-                var activeProcessIdentifier = GetIdentifier(activeProcess);
-                if (_currentActiveWindow != null)
+                if (_currentActiveWindow.Identifier != activeProcessIdentifier) // Switched window
                 {
-                    if (_currentActiveWindow.Identifier != activeProcessIdentifier) // Switched window
-                    {
-                        // Add endtime to currentActiveWindow
-                        _currentActiveWindow.EndTime = now;
-                        var lastActiveWindow = (ActiveWindow)_currentActiveWindow.Clone();
+                    // Add end time to currentActiveWindow
+                    _currentActiveWindow.EndTime = now;
+                    var lastActiveWindow = (ActiveWindow)_currentActiveWindow.Clone();
 
-                        // Set new currentActive window.
-                        _currentActiveWindow = new ActiveWindow(activeProcessIdentifier, now);
-
-                        return lastActiveWindow;
-                    }
-                }
-                else // First current active window
-                {
+                    // Set new currentActive window.
                     _currentActiveWindow = new ActiveWindow(activeProcessIdentifier, now);
+
+                    // "Idle" runs when nothing else does, and "LockApp" is the lock screen.
+                    if (lastActiveWindow.Identifier == "LockApp" || lastActiveWindow.Identifier == "Idle")
+                    {
+                        return null;
+                    }
+
+                    return lastActiveWindow;
                 }
+            }
+            else // First current active window
+            {
+                _currentActiveWindow = new ActiveWindow(activeProcessIdentifier, now);
             }
             return null;
         }
 
-        private string GetIdentifier(Process process)
+        private static string GetIdentifier(Process process)
         {
-            var processName = process.ProcessName;
-            var windowName = process.MainWindowTitle; // TODO: Remove too specific info from title
+            string processName = process.ProcessName;
+            string windowName = process.MainWindowTitle; // TODO: Remove too specific info from title
 
-            return $"{processName}-{windowName}";
+            return MakeIdentifier(processName, windowName);
+        }
+
+        private static string MakeIdentifier(string processName, string windowName)
+        {
+            string identifier = $"{processName}";
+
+            string cleanedWindowName = windowName.Split(new[] {"?-", "-"}, StringSplitOptions.RemoveEmptyEntries)
+                .LastOrDefault()?
+                .Trim();
+
+            if (processName == "ApplicationFrameHost")
+            {
+                var a = 2;
+            }
+
+            if (!string.IsNullOrEmpty(cleanedWindowName))
+            {
+                identifier += $" - {cleanedWindowName}";
+            }
+            return identifier;
         }
 
         [DllImport("user32.dll")]
@@ -57,13 +85,13 @@ namespace Tracker.Implementations
         [DllImport("user32.dll")]
         private static extern int GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
-        private Process GetActiveProcess()
+        private static Process GetActiveProcess()
         {
             IntPtr hWnd = GetForegroundWindow();
-            return hWnd != null ? GetProcessByHandle(hWnd) : null;
+            return GetProcessByHandle(hWnd);
         }
 
-        private Process GetProcessByHandle(IntPtr hWnd)
+        private static Process GetProcessByHandle(IntPtr hWnd)
         {
             try
             {
