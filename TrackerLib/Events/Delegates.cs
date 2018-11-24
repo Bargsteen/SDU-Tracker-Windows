@@ -5,4 +5,6 @@
 
     public delegate void ParticipantIdentifierChangedHandler(object sender,
         ParticipantIdentifierChangedEventArgs args);
+
+    public delegate void UserSessionChangeHandler(object sender, UserSessionChangeEventArgs args);
 }

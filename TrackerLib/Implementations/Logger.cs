@@ -16,6 +16,7 @@ namespace TrackerLib.Implementations
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo("log4net.config"));
+            logRepository.Shutdown();
         }
 
         public void LogInfo(string msg) => _log.Info(msg);

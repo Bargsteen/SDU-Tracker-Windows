@@ -105,8 +105,8 @@ namespace TrackerLibTests
             _runner.Run();
 
             // Assert
-            _alertService.Verify(a => a.ShowAlert(AlertsConstants.TrackingHasEndedTitle, AlertsConstants.TrackingHasEndedMessage, 
-                AlertsConstants.OkButtonText));
+            _alertService.Verify(a => a.ShowAlert(AlertConstants.TrackingHasEndedTitle, AlertConstants.TrackingHasEndedMessage, 
+                AlertConstants.OkButtonText));
             _launchAtLoginService.VerifySet(l => l.LaunchAtLoginIsEnabled = false);
         }
 
@@ -120,8 +120,8 @@ namespace TrackerLibTests
             _runner.Run();
 
             // Assert
-            _alertService.Verify(a => a.ShowAlert(AlertsConstants.ReadyForSetupTitle, AlertsConstants.ReadyForSetupMessage, 
-                AlertsConstants.OkButtonText));
+            _alertService.Verify(a => a.ShowAlert(AlertConstants.ReadyForSetupTitle, AlertConstants.ReadyForSetupMessage, 
+                AlertConstants.OkButtonText));
         }
 
         [Fact]

@@ -1,7 +1,7 @@
-﻿namespace Tracker
+﻿namespace TrackerLib.Interfaces
 {
     public interface IUserWindow
     {
-        void ShowWindow();
+       string ShowWindow();
     }
 }

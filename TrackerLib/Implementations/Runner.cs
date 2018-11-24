@@ -38,8 +38,8 @@ namespace TrackerLib.Implementations
             if (!_settings.AppHasBeenSetup)
             {
                 _logger.LogInfo(LoggerConstants.AppHasNotBeenSetupText);
-                _alertService.ShowAlert(AlertsConstants.ReadyForSetupTitle, AlertsConstants.ReadyForSetupMessage,
-                    AlertsConstants.OkButtonText);
+                _alertService.ShowAlert(AlertConstants.ReadyForSetupTitle, AlertConstants.ReadyForSetupMessage,
+                    AlertConstants.OkButtonText);
             }
             else
             {
@@ -65,8 +65,8 @@ namespace TrackerLib.Implementations
                 else
                 {
                     _launchAtLoginService.LaunchAtLoginIsEnabled = false;
-                    _alertService.ShowAlert(AlertsConstants.TrackingHasEndedTitle,
-                        AlertsConstants.TrackingHasEndedMessage, AlertsConstants.OkButtonText);
+                    _alertService.ShowAlert(AlertConstants.TrackingHasEndedTitle,
+                        AlertConstants.TrackingHasEndedMessage, AlertConstants.OkButtonText);
                 }
             }
         }

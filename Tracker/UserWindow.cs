@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using TrackerLib.Interfaces;
-using System.Linq;
 
 namespace Tracker
 {
@@ -23,7 +23,7 @@ namespace Tracker
             userListBox.DataSource = _unsavedUserList;
         }
 
-        private void UserWindowLoaded(object sender, System.EventArgs e)
+        private void UserWindowLoaded(object sender, EventArgs e)
         {
             CenterToScreen();
 
@@ -35,15 +35,17 @@ namespace Tracker
             UpdateView();
         }
 
-        public void ShowWindow()
+        public string ShowWindow()
         {
             if (!Visible)
             {
                 ShowDialog();
             }
+            // The current user after interaction with the window
+            return _settings.CurrentUser;
         }
 
-        private void SaveChangesButtonClicked(object sender, System.EventArgs e)
+        private void SaveChangesButtonClicked(object sender, EventArgs e)
         {
             int selectedIndex = userListBox.SelectedIndex;
 
@@ -56,7 +58,7 @@ namespace Tracker
             Close();
         }
 
-        private void DeleteChosenUserButtonClicked(object sender, System.EventArgs e)
+        private void DeleteChosenUserButtonClicked(object sender, EventArgs e)
         {
             int selectedIndex = userListBox.SelectedIndex;
 
@@ -67,7 +69,7 @@ namespace Tracker
             }
         }
 
-        private void CreateNewUserButtonClicked(object sender, System.EventArgs e)
+        private void CreateNewUserButtonClicked(object sender, EventArgs e)
         {
             var result = _createUserWindow.ShowDialog();
             if (result == DialogResult.OK) // A new name was entered and create was pressed

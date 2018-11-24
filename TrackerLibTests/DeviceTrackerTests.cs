@@ -16,6 +16,7 @@ namespace TrackerLibTests
         private readonly Mock<ISendOrSaveService> _sendOrSaveService;
         private readonly Mock<ISystemEventService> _systemEventService;
         private readonly Mock<ISettings> _settings;
+        private readonly Mock<IUserService> _userService;
 
         public DeviceTrackerTests()
         {
@@ -33,7 +34,8 @@ namespace TrackerLibTests
                     => TestHelper.MakeTestDeviceUsage(eventType, participantId));
 
             _deviceTracker =
-                new DeviceTracker(_sendOrSaveService.Object, _settings.Object, _systemEventService.Object, usageBuilder.Object);
+                new DeviceTracker(_sendOrSaveService.Object, _settings.Object, _systemEventService.Object, 
+                    usageBuilder.Object, _userService.Object);
         }
 
         public void Dispose()

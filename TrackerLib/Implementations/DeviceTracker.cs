@@ -11,14 +11,16 @@ namespace TrackerLib.Implementations
         private readonly ISettings _settings;
         private readonly ISystemEventService _systemEventService;
         private readonly IUsageBuilder _usageBuilder;
+        private readonly IUserService _userService;
 
         public DeviceTracker(ISendOrSaveService sendOrSaveService, ISettings settings, 
-            ISystemEventService systemEventService, IUsageBuilder usageBuilder)
+            ISystemEventService systemEventService, IUsageBuilder usageBuilder, IUserService userService)
         {
             _sendOrSaveService = sendOrSaveService;
             _settings = settings;
             _systemEventService = systemEventService;
             _usageBuilder = usageBuilder;
+            _userService = userService;
 
             _settings.OnParticipantIdentifierChanged += HandleParticipantIdentifierChanged;
         }
@@ -55,8 +57,7 @@ namespace TrackerLib.Implementations
 
         private void HandleSystemResumed(object sender, EventArgs e)
         {
-            var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Started);
-            _sendOrSaveService.SendOrSaveUsage(deviceUsage);
+            _userService.CheckIfUserHasChanged();
         }
 
         private void HandleParticipantIdentifierChanged(object sender, ParticipantIdentifierChangedEventArgs args)

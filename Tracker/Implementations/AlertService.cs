@@ -9,5 +9,10 @@ namespace Tracker.Implementations
         {
             MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        public bool ShowAlertReturnYesWasPressed(string title, string message, string buttonNoText, string buttonYesText)
+        {
+            throw new System.NotImplementedException();	
+        }
     }
 }
