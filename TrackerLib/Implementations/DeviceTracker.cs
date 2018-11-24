@@ -12,6 +12,7 @@ namespace TrackerLib.Implementations
         private readonly ISystemEventService _systemEventService;
         private readonly IUsageBuilder _usageBuilder;
         private readonly IUserService _userService;
+        private bool hasBeenStarted;
 
         public DeviceTracker(ISendOrSaveService sendOrSaveService, ISettings settings, 
             ISystemEventService systemEventService, IUsageBuilder usageBuilder, IUserService userService)
@@ -21,22 +22,24 @@ namespace TrackerLib.Implementations
             _systemEventService = systemEventService;
             _usageBuilder = usageBuilder;
             _userService = userService;
-
-            _settings.OnParticipantIdentifierChanged += HandleParticipantIdentifierChanged;
+            hasBeenStarted = false;
         }
 
         public void StartTracking()
         {
+            hasBeenStarted = true;
             _systemEventService.SystemSuspended += HandleSystemSuspended;
             _systemEventService.SystemStartedOrResumed += HandleSystemResumed;
+            _userService.OnUserSessionStarted += HandleUserSessionStarted;
+            _userService.OnUserSessionEnded += HandleUserSessionEnded;
 
-            // Send initial
-            var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Started);
-            _sendOrSaveService.SendOrSaveUsage(deviceUsage);
+            _userService.CheckIfUserHasChanged();
         }
 
         public void StopTracking()
         {
+            if (!hasBeenStarted) return;
+
             _systemEventService.SystemSuspended -= HandleSystemSuspended;
             _systemEventService.SystemStartedOrResumed -= HandleSystemResumed;
 
@@ -60,12 +63,18 @@ namespace TrackerLib.Implementations
             _userService.CheckIfUserHasChanged();
         }
 
-        private void HandleParticipantIdentifierChanged(object sender, ParticipantIdentifierChangedEventArgs args)
+        private void HandleUserSessionStarted(object sender, UserSessionChangeEventArgs args)
         {
-            var endedUsage = _usageBuilder.MakeDeviceUsage(EventType.Ended, args.PreviousParticipantIdentifier);
-            var startedUsage = _usageBuilder.MakeDeviceUsage(EventType.Started, args.NewParticipantIdentifier);
-            _sendOrSaveService.SendOrSaveUsage(endedUsage);
-            _sendOrSaveService.SendOrSaveUsage(startedUsage);
+            string participantIdentifier = _settings.MakeParticipantIdentifierForUser(args.User);
+            var deviceStartedUsage = _usageBuilder.MakeDeviceUsage(EventType.Started, participantIdentifier);
+            _sendOrSaveService.SendOrSaveUsage(deviceStartedUsage);
+        }
+
+        private void HandleUserSessionEnded(object sender, UserSessionChangeEventArgs args)
+        {
+            string participantIdentifier = _settings.MakeParticipantIdentifierForUser(args.User);
+            var deviceEndedUsage = _usageBuilder.MakeDeviceUsage(EventType.Ended, participantIdentifier);
+            _sendOrSaveService.SendOrSaveUsage(deviceEndedUsage);
         }
     }
 }

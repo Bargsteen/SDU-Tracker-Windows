@@ -27,9 +27,6 @@ namespace Tracker
         {
             CenterToScreen();
 
-            _settings.Users.ForEach(Console.WriteLine);
-            Console.WriteLine($"Current: {_settings.CurrentUser}");
-
             _unsavedUserList = new List<string>(_settings.Users);
 
             UpdateView();

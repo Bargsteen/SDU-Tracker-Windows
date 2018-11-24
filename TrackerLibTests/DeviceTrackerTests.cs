@@ -9,7 +9,7 @@ using Xunit;
 
 namespace TrackerLibTests
 {
-    public class DeviceTrackerTests : IDisposable
+    public class DeviceTrackerTests
     {
         private readonly IDeviceTracker _deviceTracker;
 
@@ -23,6 +23,7 @@ namespace TrackerLibTests
             _sendOrSaveService = new Mock<ISendOrSaveService>();
             _systemEventService = new Mock<ISystemEventService>();
             _settings = new Mock<ISettings>();
+            _userService = new Mock<IUserService>();
 
             var usageBuilder = new Mock<IUsageBuilder>();
 
@@ -38,33 +39,44 @@ namespace TrackerLibTests
                     usageBuilder.Object, _userService.Object);
         }
 
-        public void Dispose()
-        {
-        }
 
+
+        ///////////////////////////////////////////////////////////////////////
+        //                          INITIALIZATION                           //
+        ///////////////////////////////////////////////////////////////////////
 
         [Fact]
-        public void Initialized__UserLogsOut__DoesNothing()
+        public void Initialized__SystemIsResumed__DoesNothing()
+        {
+            // Act
+            RaiseSystemResumedEvent();
+
+            // Assert
+            VerifyNothingWasDone();
+        }
+
+        [Fact]
+        public void Initialized__SystemIsSuspended__DoesNothing()
         {
             // Act
             RaiseSystemSuspendedEvent();
 
             // Assert
-            VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Never());
+            VerifyNothingWasDone();
         }
 
+        ///////////////////////////////////////////////////////////////////////
+        //                          START TRACKING                           //
+        ///////////////////////////////////////////////////////////////////////
+
         [Fact]
-        public void StartTracking__ComputerSleeps__SendsDeviceEndedUsage()
+        public void StartTracking__NoConditions__InvokesCheckIfUserHasChanged()
         {
-            // Arrange
+            // Act
             _deviceTracker.StartTracking();
 
-            // Act
-            RaiseSystemSuspendedEvent();
-            
-
             // Assert
-            VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Once());
+            VerifyCheckIfUserHasChanged(Times.Once());
         }
 
         [Fact]
@@ -79,38 +91,67 @@ namespace TrackerLibTests
             // Assert
 
             // Once for just starting tracking, and once for the event
-            VerifyDeviceUsageSentXTimes(EventType.Started, Times.Exactly(2));
+            VerifyCheckIfUserHasChanged(Times.Exactly(2));
         }
 
         [Fact]
-        public void StartTracking__CurrentUserChanges__SendsDeviceEndAndStart()
+        public void StartTracking__ComputerSleeps__SendsDeviceUsage()
         {
             // Arrange
-            const string previousParticipantId = "PreviousParticipantId";
-            const string newParticipantId = "NewParticipantId";
-            _settings.SetupGet(s => s.ParticipantIdentifier).Returns(previousParticipantId);
             _deviceTracker.StartTracking();
-            
+
             // Act
-            _settings.Raise(s => s.OnParticipantIdentifierChanged += null, 
-               new ParticipantIdentifierChangedEventArgs(previousParticipantId, newParticipantId));
+            RaiseSystemSuspendedEvent();
 
             // Assert
-
-            // Should check participantIdentifier to be thorough.
-            VerifyDeviceUsageSentXTimes(EventType.Started, Times.Exactly(2)); // Once for StartTracking, once for Event
-            VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Once()); // Once for event
+            VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Once());
         }
 
 
         [Fact]
-        public void StartTracking__NoConditions__SendsDeviceStarted()
+        public void StartTracking__UserSessionStartedInvoked__SendsDeviceStartedUsage()
         {
+            // Arrange
+            const string userId = "U";
+            const string user = "A";
+            SetupSettingsMakeParticipantIdentifierForUser(userId);
+
             // Act
             _deviceTracker.StartTracking();
+            _userService.Raise(u => u.OnUserSessionStarted += null, new UserSessionChangeEventArgs(user));
 
             // Assert
-            VerifyDeviceUsageSentXTimes(EventType.Started, Times.Once());
+            VerifyDeviceUsageForParticipantIdSentXTimes($"{userId}:{user}", EventType.Started, Times.Once());
+        }
+
+        [Fact]
+        public void StartTracking__UserSessionEndedInvoked__SendsDeviceEndedUsage()
+        {
+            // Arrange
+            const string userId = "U";
+            const string user = "A";
+            SetupSettingsMakeParticipantIdentifierForUser(userId);
+
+            // Act
+            _deviceTracker.StartTracking();
+            _userService.Raise(u => u.OnUserSessionEnded += null, new UserSessionChangeEventArgs(user));
+
+            // Assert
+            VerifyDeviceUsageForParticipantIdSentXTimes($"{userId}:{user}", EventType.Ended, Times.Once());
+        }
+
+        ///////////////////////////////////////////////////////////////////////
+        //                           STOP TRACKING                           //
+        ///////////////////////////////////////////////////////////////////////
+
+        [Fact]
+        public void StopTracking__WasNotStarted__DoesNothing()
+        {
+            // Act
+            _deviceTracker.StopTracking();
+
+            // Assert
+            VerifyNothingWasDone();
         }
 
         [Fact]
@@ -125,6 +166,11 @@ namespace TrackerLibTests
             // Assert
             VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Once());
         }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        //                              HELPERS                              //
+        ///////////////////////////////////////////////////////////////////////
 
         private void RaiseSystemResumedEvent()
         {
@@ -142,11 +188,29 @@ namespace TrackerLibTests
                 s.SendOrSaveUsage(It.Is<DeviceUsage>(u => u.EventType == eventType.GetHashCode()), false), times);
         }
 
+        private void VerifyCheckIfUserHasChanged(Times times)
+        {
+            _userService.Verify(u => u.CheckIfUserHasChanged(), times);
+        }
+
         private void VerifyDeviceUsageForParticipantIdSentXTimes(string participantId, EventType eventType, Times times)
         {
             _sendOrSaveService.Verify(s => s.SendOrSaveUsage(It.Is<DeviceUsage>(u => u.EventType == eventType.GetHashCode() 
                                                                                      && u.ParticipantIdentifier == participantId), false), 
                                                                                      times);
+        }
+
+        private void VerifyNothingWasDone()
+        {
+            VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Never());
+            VerifyDeviceUsageSentXTimes(EventType.Started, Times.Never());
+            VerifyCheckIfUserHasChanged(Times.Never());
+        }
+
+        private void SetupSettingsMakeParticipantIdentifierForUser(string userId)
+        {
+            _settings.Setup(s => s.MakeParticipantIdentifierForUser(It.IsAny<string>()))
+                .Returns<string>(u => $"{userId}:{u}");
         }
     }
 }

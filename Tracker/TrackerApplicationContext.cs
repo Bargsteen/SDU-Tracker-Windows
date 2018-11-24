@@ -10,18 +10,19 @@ namespace Tracker
     {
         private readonly IRunner _runner;
         private readonly ISettings _settings;
-        private readonly IUserWindow _userWindow;
+        private readonly IUserService _userService;
         private NotifyIcon _trayIcon;
 
-        public TrackerApplicationContext(IRunner runner, ISettings settings, IUserWindow userWindow)
+        public TrackerApplicationContext(IRunner runner, ISettings settings, IUserService userService)
         {
             _runner = runner;
             _settings = settings;
-            _userWindow = userWindow;
-
-            _settings.OnCurrentUserChanged += OnCurrentUserChanged;
+            _userService = userService;
 
             SetupMenu();
+
+            _userService.OnUserSessionStarted += HandleUserSessionStarted;
+            
             Application.ApplicationExit += OnApplicationExit;
 
             _runner.Run();
@@ -44,7 +45,7 @@ namespace Tracker
 
         private void OpenUserMenuClicked(object sender, EventArgs args)
         {
-            _userWindow.ShowWindow();
+            _userService.ShowUserWindow();
         }
 
         private void Exit(object sender, EventArgs e)
@@ -59,12 +60,12 @@ namespace Tracker
             _runner.Terminate();
         }
 
-        private void OnCurrentUserChanged(object sender, CurrentUserChangedEventArgs args)
+        private void HandleUserSessionStarted(object sender, UserSessionChangeEventArgs args)
         {
-            _trayIcon.ContextMenu.MenuItems[0].Text = MakeCurrentUserString(args.NewCurrentUser);
+            _trayIcon.ContextMenu.MenuItems[0].Text = MakeCurrentUserString(args.User);
         }
 
-        private string MakeCurrentUserString(string user)
+        private static string MakeCurrentUserString(string user)
         {
             return $"Valgte bruger: {user}";
         }

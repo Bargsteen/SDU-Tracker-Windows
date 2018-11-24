@@ -1,3 +1,4 @@
+using System;
 using log4net;
 using log4net.Config;
 using System.IO;
@@ -16,7 +17,6 @@ namespace TrackerLib.Implementations
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo("log4net.config"));
-            logRepository.Shutdown();
         }
 
         public void LogInfo(string msg) => _log.Info(msg);
@@ -27,7 +27,7 @@ namespace TrackerLib.Implementations
 
         public void LogUsage<T>(T usage, UsageLogType usageLogType) where T : Usage
         {
-            string logMsg = "";
+            var logMsg = "";
 
             switch (usageLogType)
             {
@@ -40,15 +40,17 @@ namespace TrackerLib.Implementations
                 case UsageLogType.Saved:
                     logMsg += "Saved: ";
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(usageLogType), usageLogType, null);
             }
 
             switch (usage)
             {
                 case DeviceUsage deviceUsage:
-                    logMsg += $"[DEVICE] {deviceUsage.EventType.EventTypeToString()}";
+                    logMsg += $"[DEVICE] - {deviceUsage.ParticipantIdentifier} - {deviceUsage.EventType.EventTypeToString()}";
                     break;
                 case AppUsage appUsage:
-                    logMsg += $"[APP] {appUsage.Package} - {appUsage.Duration} ms";
+                    logMsg += $"[APP] - {appUsage.ParticipantIdentifier} - {appUsage.Package} - {appUsage.Duration} ms";
                     break;
             }
 

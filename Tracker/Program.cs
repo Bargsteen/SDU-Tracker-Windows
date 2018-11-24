@@ -58,12 +58,12 @@ namespace Tracker
             container.Register<ISleepService, SleepService>();
             container.Register<ISystemEventService, SystemEventService>();
             container.Register<IDeviceTracker, DeviceTracker>();
-            container.Register<IAlertService, AlertService>();
+            container.Register<IAlertService, AlertService>(Lifestyle.Singleton);
             container.Register<IUsageBuilder, UsageBuilder>();
             container.Register<ILaunchAtLoginService, LaunchAtLoginService>();
-            container.Register<IUserService, UserService>();
+            container.Register<IUserService, UserService>(Lifestyle.Singleton);
             container.Register<IResendService, ResendService>();
-            container.Register<IUserWindow, UserWindow>();
+            container.Register<IUserWindow, UserWindow>(Lifestyle.Singleton);;
             container.Register<TrackerApplicationContext>();
 
             return container;

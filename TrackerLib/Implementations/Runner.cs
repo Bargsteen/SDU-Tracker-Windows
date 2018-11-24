@@ -1,7 +1,7 @@
-﻿using TrackerLib.Constants;
+﻿using System;
+using TrackerLib.Constants;
 using TrackerLib.Enums;
 using TrackerLib.Interfaces;
-using TrackerLib.Models;
 
 namespace TrackerLib.Implementations
 {
@@ -15,12 +15,11 @@ namespace TrackerLib.Implementations
         private readonly ILogger _logger;
         private readonly IResendService _resendService;
         private readonly ISettings _settings;
-        private readonly IUserService _userService;
 
 
         public Runner(IAlertService alertService, IAppTracker appTracker, IDateTimeService dateTimeService, 
             IDeviceTracker deviceTracker, ILaunchAtLoginService launchAtLoginService, ILogger logger, 
-            IResendService resendService, ISettings settings, IUserService userService)
+            IResendService resendService, ISettings settings)
         {
             _alertService = alertService;
             _appTracker = appTracker;
@@ -30,7 +29,6 @@ namespace TrackerLib.Implementations
             _logger = logger;
             _resendService = resendService;
             _settings = settings;
-            _userService = userService;
         }
 
         public void Run()
@@ -47,8 +45,6 @@ namespace TrackerLib.Implementations
                 {
                     // TODO: Should be done in setup instead.
                     _launchAtLoginService.LaunchAtLoginIsEnabled = true;
-
-                    _userService.CheckIfUserHasChanged();
 
                     _resendService.StartPeriodicResendingOfSavedUsages(TrackingConstants.SecondsBetweenResendChecks, TrackingConstants.LimitOfEachUsage);
 

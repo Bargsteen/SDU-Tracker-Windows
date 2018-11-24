@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TrackerLib.Enums;
-using TrackerLib.Events;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
 
@@ -30,25 +29,15 @@ namespace Tracker.Implementations
             get => _settings?.CurrentUser ?? "ukendt-bruger";
             set
             {
-                string previousParticipantIdentifier = ParticipantIdentifier;
-                string previousCurrentUser = CurrentUser;
-
                 _settings.CurrentUser = value;
                 _settings.Save();
-
-                string newParticipantIdentifier = ParticipantIdentifier;
-                string newCurrentUser = CurrentUser;
-
-                OnParticipantIdentifierChanged
-                    ?.Invoke(this, new ParticipantIdentifierChangedEventArgs(previousParticipantIdentifier, newParticipantIdentifier));
-
-                OnCurrentUserChanged
-                    ?.Invoke(this, new CurrentUserChangedEventArgs(previousCurrentUser, newCurrentUser));
             }
         }
 
-        public event ParticipantIdentifierChangedHandler OnParticipantIdentifierChanged;
-        public event CurrentUserChangedHandler OnCurrentUserChanged;
+        public string MakeParticipantIdentifierForUser(string user)
+        {
+            return $"{UserId}:{user}";
+        }
 
         public string DeviceModelName => Environment.MachineName;
 
@@ -82,7 +71,7 @@ namespace Tracker.Implementations
             }
         }
 
-        public string ParticipantIdentifier => $"{UserId}:{CurrentUser}";
+        public string ParticipantIdentifier => MakeParticipantIdentifierForUser(CurrentUser);
 
         public Credentials Credentials => new Credentials(_settings.Username, _settings.Password);
     }

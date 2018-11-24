@@ -4,13 +4,12 @@ using TrackerLib.Enums;
 using TrackerLib.Implementations;
 using TrackerLib.Interfaces;
 using TrackerLib.Constants;
-using TrackerLib.Models;
 using Xunit;
 
 namespace TrackerLibTests
 {
     // Naming convention: MethodName__ConditionOne_ConditionTwo__ExpectedResult
-    public class RunnerTests : IDisposable
+    public class RunnerTests
     {
         public RunnerTests()
         {
@@ -22,16 +21,10 @@ namespace TrackerLibTests
             _logger = new Mock<ILogger>();
             _settings = new Mock<ISettings>();
             _resendService = new Mock<IResendService>();
-            _userService = new Mock<IUserService>();
 
             _runner = new Runner(_alertService.Object, _appTracker.Object, _dateTimeService.Object,
                 _deviceTracker.Object, _launchAtLoginService.Object, _logger.Object, 
-                _resendService.Object, _settings.Object, _userService.Object);
-        }
-
-        public void Dispose()
-        {
-            // Nothing to do
+                _resendService.Object, _settings.Object);
         }
 
         private readonly IRunner _runner;
@@ -44,7 +37,6 @@ namespace TrackerLibTests
         private readonly Mock<ILogger> _logger;
         private readonly Mock<ISettings> _settings;
         private readonly Mock<IResendService> _resendService;
-        private readonly Mock<IUserService> _userService;
 
         [Fact]
         public void Run__IsSetup_TrackingDateNotReached_AppAndDeviceTracking__StartsTrackingBoth()
@@ -156,7 +148,7 @@ namespace TrackerLibTests
         }
 
         [Fact]
-        public void Terminate__NotSetup__SimplyTerminates()
+        public void Terminate__NotSetup__DoesNothing()
         {
             // Arrange
             _settings.Setup(s => s.AppHasBeenSetup).Returns(false);

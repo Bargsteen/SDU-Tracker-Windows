@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using TrackerLib.Constants;
 using TrackerLib.Interfaces;
 
@@ -24,7 +25,6 @@ namespace TrackerLib.Implementations
 
         public void StartTracking()
         {
-
             _trackingThread = new Thread(() =>
             {
                 while (true)
@@ -42,7 +42,7 @@ namespace TrackerLib.Implementations
 
         public void StopTracking()
         {
-            // Nothing needs to be done.
+             // Nothing to be done, since it is a background thread.
         }
 
         private void SendOrSaveIfAppHasChanged()
