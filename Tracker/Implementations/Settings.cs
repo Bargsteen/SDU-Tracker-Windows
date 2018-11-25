@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TrackerLib.Enums;
 using TrackerLib.Interfaces;
 using TrackerLib.Models;
@@ -22,19 +23,20 @@ namespace Tracker.Implementations
 
         public List<string> Users
         {
-            get => _settings?.UserList ?? new List<string>();
+            get => _settings?.Users.Cast<string>().ToList();
             set
             {
-                _settings.UserList = value;
+                _settings.Users.Clear();
+                _settings.Users.AddRange(value.ToArray());
                 _settings.Save();
             }
         }
 
-        public int UserCount => _settings.UserList?.Count ?? 1;
+        public int UserCount => Users?.Count ?? 1;
 
         public string CurrentUser
         {
-            get => _settings?.CurrentUser ?? "ukendt-bruger";
+            get => _settings.CurrentUser;
             set
             {
                 _settings.CurrentUser = value;

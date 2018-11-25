@@ -8,10 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using TrackerLib.Enums;
-
 namespace Tracker.Properties {
     
     
@@ -44,12 +40,78 @@ namespace Tracker.Properties {
                 return ((string)(this["Password"]));
             }
         }
-
-        public bool AppHasBeenSetup { get; internal set; }
-        public List<string> UserList { get; internal set; }
-        public string CurrentUser { get; internal set; }
-        public TrackingType TrackingType { get; internal set; }
-        public DateTimeOffset StopTrackingDate { get; internal set; }
-        public string UserId { get; internal set; }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AppHasBeenSetup {
+            get {
+                return ((bool)(this["AppHasBeenSetup"]));
+            }
+            set {
+                this["AppHasBeenSetup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>Kasper</string>\r\n  <string>Kasper2</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Users {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Users"]));
+            }
+            set {
+                this["Users"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Kasper")]
+        public string CurrentUser {
+            get {
+                return ((string)(this["CurrentUser"]));
+            }
+            set {
+                this["CurrentUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AppAndDevice")]
+        public global::TrackerLib.Enums.TrackingType TrackingType {
+            get {
+                return ((global::TrackerLib.Enums.TrackingType)(this["TrackingType"]));
+            }
+            set {
+                this["TrackingType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Bargsteen")]
+        public string UserId {
+            get {
+                return ((string)(this["UserId"]));
+            }
+            set {
+                this["UserId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTimeOffset StopTrackingDate {
+            get {
+                return ((global::System.DateTimeOffset)(this["StopTrackingDate"]));
+            }
+            set {
+                this["StopTrackingDate"] = value;
+            }
+        }
     }
 }
