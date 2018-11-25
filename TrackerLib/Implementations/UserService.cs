@@ -27,8 +27,7 @@ namespace TrackerLib.Implementations
             if (_settings.UserCount > 1) // Multiple users
             {
                 bool shouldShowUserWindow = !_alertService.ShowAlertReturnYesWasPressed(AlertConstants.ChangeUserAlertTitle(_settings.CurrentUser),
-                    AlertConstants.ChangeUserAlertMessage, AlertConstants.ChangeUserAlertNoButtonText,
-                    AlertConstants.ChangeUserAlertYesButtonText);
+                    AlertConstants.ChangeUserAlertTitle(_settings.CurrentUser));
 
                 if (shouldShowUserWindow)
                 {

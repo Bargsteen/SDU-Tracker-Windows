@@ -2,8 +2,8 @@
 {
     public interface IAlertService
     {
-        void ShowAlert(string title, string message, string buttonText);
+        void ShowAlert(string title, string message);
 
-        bool ShowAlertReturnYesWasPressed(string title, string message, string buttonNoText, string buttonYesText);
+        bool ShowAlertReturnYesWasPressed(string title, string message);
     }
 }

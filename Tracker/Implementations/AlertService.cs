@@ -5,14 +5,16 @@ namespace Tracker.Implementations
 {
     public class AlertService : IAlertService
     {
-        public void ShowAlert(string title, string message, string buttonText)
+        public void ShowAlert(string title, string message)
         {
             MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public bool ShowAlertReturnYesWasPressed(string title, string message, string buttonNoText, string buttonYesText)
+        public bool ShowAlertReturnYesWasPressed(string title, string message)
         {
-            throw new System.NotImplementedException();	
+            var alertResult = MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                       MessageBoxDefaultButton.Button1);
+            return alertResult == DialogResult.Yes;
         }
     }
 }

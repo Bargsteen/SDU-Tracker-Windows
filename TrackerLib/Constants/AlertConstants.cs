@@ -2,9 +2,6 @@
 {
     public static class AlertConstants
     {
-        // Generic Text
-        public static string OkButtonText = "Ok";
-
         // Generic Time
         public static int LongAlertTime = 10; // Seconds
 
@@ -25,11 +22,6 @@
         // Change User Alert
         public static string ChangeUserAlertTitle(string user) => $"Er du {user}?";
 
-        public static string ChangeUserAlertMessage = "Hvis ikke, så skift nuværende bruger.";
-
-        public static string ChangeUserAlertYesButtonText = "Ja, det er mig";
-
-        public static string ChangeUserAlertNoButtonText = "Nej, skift bruger";
-
+        public static string ChangeUserAlertMessage = "Hvis ikke, så tryk nej for at skifte bruger.";
     }
 }

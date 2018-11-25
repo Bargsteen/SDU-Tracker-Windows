@@ -1,7 +1,6 @@
 ﻿using SimpleInjector;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows.Forms;
 using Tracker.Implementations;
 using TrackerLib.Constants;
@@ -74,19 +73,21 @@ namespace Tracker
             return new Persistence();
         }
 
-        private static readonly ISettings Settings = new Settings()
-        {
-            AppHasBeenSetup = true,
-            CurrentUser = "Kasper",
-            StopTrackingDate = DateTimeOffset.MaxValue,
-            TrackingType = TrackingType.AppAndDevice,
-            UserId = "Bargsteen",
-            Users = { "Kasper", "Kasper2", "Kasper3" }
-        };
-
         private static ISettings GetSettings()
         {
-            return Settings;
+            var settings = new Settings();
+
+            if (!settings.AppHasBeenSetup)
+            {
+                settings.AppHasBeenSetup = true;
+                settings.Users = new List<string> { "Kasper", "Kasper2", "Kasper3" };
+                settings.UserId = "Bargsteen";
+                settings.CurrentUser = "Kasper";
+                settings.StopTrackingDate = DateTimeOffset.MaxValue;
+                settings.TrackingType = TrackingType.AppAndDevice;
+            }
+
+            return settings;
         }
 
         private static void HandleArgs(IReadOnlyList<string> args)
@@ -100,7 +101,7 @@ namespace Tracker
                 string.Equals(uri.Scheme, SetupConstants.UriScheme, StringComparison.OrdinalIgnoreCase))
             {
                 setupService.SetupAppByUri(uri);
-                alertService.ShowAlert("Opened by URL:", uri.ToString(), "Ok");
+                alertService.ShowAlert("Opened by URL:", uri.ToString());
             }
         }
     }

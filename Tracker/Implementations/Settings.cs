@@ -20,7 +20,15 @@ namespace Tracker.Implementations
             }
         }
 
-        public List<string> Users { get; set; } = new List<string>();
+        public List<string> Users
+        {
+            get => _settings?.UserList ?? new List<string>();
+            set
+            {
+                _settings.UserList = value;
+                _settings.Save();
+            }
+        }
 
         public int UserCount => _settings.UserList?.Count ?? 1;
 

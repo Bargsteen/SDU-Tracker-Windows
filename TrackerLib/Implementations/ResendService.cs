@@ -21,7 +21,9 @@ namespace TrackerLib.Implementations
             {
                 _sendOrSaveService.SendSomeUsagesFromPersistence(limitOfEachUsage);
                 _sleepService.SleepFor(intervalInSeconds);
+                
             });
+            thread.IsBackground = true;
             thread.Start();
         }
     }

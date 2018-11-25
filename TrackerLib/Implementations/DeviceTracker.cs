@@ -12,7 +12,7 @@ namespace TrackerLib.Implementations
         private readonly ISystemEventService _systemEventService;
         private readonly IUsageBuilder _usageBuilder;
         private readonly IUserService _userService;
-        private bool hasBeenStarted;
+        private bool _hasBeenStarted;
 
         public DeviceTracker(ISendOrSaveService sendOrSaveService, ISettings settings, 
             ISystemEventService systemEventService, IUsageBuilder usageBuilder, IUserService userService)
@@ -22,12 +22,12 @@ namespace TrackerLib.Implementations
             _systemEventService = systemEventService;
             _usageBuilder = usageBuilder;
             _userService = userService;
-            hasBeenStarted = false;
+            _hasBeenStarted = false;
         }
 
         public void StartTracking()
         {
-            hasBeenStarted = true;
+            _hasBeenStarted = true;
             _systemEventService.SystemSuspended += HandleSystemSuspended;
             _systemEventService.SystemStartedOrResumed += HandleSystemResumed;
             _userService.OnUserSessionStarted += HandleUserSessionStarted;
@@ -38,7 +38,7 @@ namespace TrackerLib.Implementations
 
         public void StopTracking()
         {
-            if (!hasBeenStarted) return;
+            if (!_hasBeenStarted) return;
 
             _systemEventService.SystemSuspended -= HandleSystemSuspended;
             _systemEventService.SystemStartedOrResumed -= HandleSystemResumed;

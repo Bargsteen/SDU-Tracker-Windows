@@ -215,7 +215,7 @@ namespace TrackerLibTests
 
         private void VerifyAlertServiceShowAlertReturnYesWasPressed(Times times)
         {
-            _alertServiceMock.Verify(a => a.ShowAlertReturnYesWasPressed(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
+            _alertServiceMock.Verify(a => a.ShowAlertReturnYesWasPressed(It.IsAny<string>(), It.IsAny<string>()),
                 times);
         }
 
@@ -233,7 +233,7 @@ namespace TrackerLibTests
         {
             // True means continue with current user. False means change is needed.
             _alertServiceMock.Setup(a => a.ShowAlertReturnYesWasPressed(It.IsAny<string>(),
-                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(returnValue);
+                It.IsAny<string>())).Returns(returnValue);
         }
 
         private void VerifyShowUserWindow(Times times)
