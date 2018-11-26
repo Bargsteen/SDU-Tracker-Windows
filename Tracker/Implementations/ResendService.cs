@@ -19,11 +19,12 @@ namespace Tracker.Implementations
         {
             var thread = new Thread(() =>
             {
-                _sendOrSaveService.SendSomeUsagesFromPersistence(limitOfEachUsage);
-                _sleepService.SleepFor(intervalInSeconds);
-                
-            });
-            thread.IsBackground = true;
+                while (true)
+                {
+                    _sendOrSaveService.SendSomeUsagesFromPersistence(limitOfEachUsage);
+                    _sleepService.SleepFor(intervalInSeconds);
+                }
+            }) {IsBackground = true};
             thread.Start();
         }
     }

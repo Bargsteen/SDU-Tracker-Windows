@@ -41,9 +41,6 @@ namespace Tracker.Implementations
             {
                 if (_dateTimeService.CurrentTime <= _settings.StopTrackingDate)
                 {
-                    // TODO: Should be done in setup instead.
-                    _launchAtLoginService.LaunchAtLoginIsEnabled = true;
-
                     _resendService.StartPeriodicResendingOfSavedUsages(TrackingConstants.SecondsBetweenResendChecks, TrackingConstants.LimitOfEachUsage);
 
                     if (_settings.TrackingType == TrackingType.AppAndDevice)
@@ -58,6 +55,7 @@ namespace Tracker.Implementations
                 }
                 else
                 {
+                    // TODO: Launch at login should remove the shortcut
                     _launchAtLoginService.LaunchAtLoginIsEnabled = false;
                     _alertService.ShowAlert(AlertConstants.TrackingHasEndedTitle,
                         AlertConstants.TrackingHasEndedMessage);

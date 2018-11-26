@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Tracker.Interfaces;
@@ -13,7 +15,10 @@ namespace Tracker.Implementations
 
         public Persistence()
         {
-            _options = new DbContextOptionsBuilder<UsageContext>().UseSqlite("DataSource = sdu-tracker.db").Options;
+            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Tracker",
+                "sdu-tracker.db");
+            _options = new DbContextOptionsBuilder<UsageContext>().UseSqlite($"DataSource = {dbPath}").Options;
+
             EnsureDatabaseIsCreated();
         }
 

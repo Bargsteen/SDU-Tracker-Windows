@@ -52,7 +52,7 @@ namespace Tracker
 
             //container.Register<ISettings, Settings>(Lifestyle.Singleton);
             container.RegisterInstance(GetSettings());
-            container.Register<ILogger, Tracker.Implementations.Logger>(Lifestyle.Singleton);
+            container.Register<ILogger, Logger>(Lifestyle.Singleton);
             container.Register<IActiveWindowService, ActiveWindowService>();
             container.RegisterInstance(GetPersistence());
             container.Register<ISendOrSaveService, SendOrSaveService>();
