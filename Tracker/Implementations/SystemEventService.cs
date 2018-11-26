@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.Win32;
-using TrackerLib.Interfaces;
+using Tracker.Interfaces;
 
 namespace Tracker.Implementations
 {

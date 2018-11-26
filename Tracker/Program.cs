@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Tracker.Constants;
+using Tracker.Enums;
 using Tracker.Implementations;
-using TrackerLib.Constants;
-using TrackerLib.Enums;
-using TrackerLib.Implementations;
-using TrackerLib.Interfaces;
+using Tracker.Interfaces;
 using Container = SimpleInjector.Container;
 
 namespace Tracker
@@ -27,15 +26,22 @@ namespace Tracker
         [STAThread]
         private static void Main(string[] args)
         {
-            
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
 
-            var trackerApplicationContext = Container.GetInstance<TrackerApplicationContext>();
+                var trackerApplicationContext = Container.GetInstance<TrackerApplicationContext>();
 
-            HandleArgs(args);
+                HandleArgs(args);
 
-            Application.Run(trackerApplicationContext);
+                Application.Run(trackerApplicationContext);
+            }
+            catch(Exception e)
+            {
+                var logger = Container.GetInstance<ILogger>();
+                logger.LogError(e.Message);
+            }
         }
 
         
@@ -46,7 +52,7 @@ namespace Tracker
 
             //container.Register<ISettings, Settings>(Lifestyle.Singleton);
             container.RegisterInstance(GetSettings());
-            container.Register<ILogger, Logger>(Lifestyle.Singleton);
+            container.Register<ILogger, Tracker.Implementations.Logger>(Lifestyle.Singleton);
             container.Register<IActiveWindowService, ActiveWindowService>();
             container.RegisterInstance(GetPersistence());
             container.Register<ISendOrSaveService, SendOrSaveService>();
@@ -80,9 +86,9 @@ namespace Tracker
             if (!settings.AppHasBeenSetup)
             {
                 settings.AppHasBeenSetup = true;
-                settings.Users = new List<string> { "Kasper", "Kasper2", "Kasper3" };
-                settings.UserId = "Bargsteen";
-                settings.CurrentUser = "Kasper";
+                settings.Users = new List<string> { "Anders" };
+                settings.UserId = "AndersTest";
+                settings.CurrentUser = "Anders";
                 settings.StopTrackingDate = DateTimeOffset.MaxValue;
                 settings.TrackingType = TrackingType.AppAndDevice;
             }

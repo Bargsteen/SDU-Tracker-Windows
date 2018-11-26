@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TrackerLib.Enums;
-using TrackerLib.Interfaces;
-using TrackerLib.Models;
+using Tracker.Enums;
+using Tracker.Interfaces;
+using Tracker.Models;
 
 namespace Tracker.Implementations
 {

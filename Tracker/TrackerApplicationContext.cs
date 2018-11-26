@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using Tracker.Events;
+using Tracker.Interfaces;
 using Tracker.Properties;
-using TrackerLib.Events;
-using TrackerLib.Interfaces;
 
 namespace Tracker
 {

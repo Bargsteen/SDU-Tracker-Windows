@@ -57,7 +57,7 @@ namespace Tracker.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
             "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>Kasper</string>\r\n  <string>Kasper2</string>\r\n</ArrayOfString>")]
+            "tring>Anders</string>\r\n  <string>Anders2</string>\r\n</ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection Users {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["Users"]));
@@ -69,7 +69,7 @@ namespace Tracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Kasper")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Anders")]
         public string CurrentUser {
             get {
                 return ((string)(this["CurrentUser"]));
@@ -82,9 +82,9 @@ namespace Tracker.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("AppAndDevice")]
-        public global::TrackerLib.Enums.TrackingType TrackingType {
+        public global::Tracker.Enums.TrackingType TrackingType {
             get {
-                return ((global::TrackerLib.Enums.TrackingType)(this["TrackingType"]));
+                return ((global::Tracker.Enums.TrackingType)(this["TrackingType"]));
             }
             set {
                 this["TrackingType"] = value;
@@ -93,7 +93,7 @@ namespace Tracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Bargsteen")]
+        [global::System.Configuration.DefaultSettingValueAttribute("AndersId")]
         public string UserId {
             get {
                 return ((string)(this["UserId"]));
@@ -105,6 +105,7 @@ namespace Tracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9999-12-12 +01:00")]
         public global::System.DateTimeOffset StopTrackingDate {
             get {
                 return ((global::System.DateTimeOffset)(this["StopTrackingDate"]));

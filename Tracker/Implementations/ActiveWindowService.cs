@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using TrackerLib.Interfaces;
-using TrackerLib.Models;
+using Tracker.Interfaces;
+using Tracker.Models;
 
 namespace Tracker.Implementations
 {

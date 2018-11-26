@@ -1,7 +1,7 @@
 ﻿using System;
 using Tracker;
 using Tracker.Implementations;
-using TrackerLib.Interfaces;
+using Tracker.Interfaces;
 using Xunit;
 
 namespace TrackerTests

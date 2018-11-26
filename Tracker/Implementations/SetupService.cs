@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Win32;
-using TrackerLib.Constants;
-using TrackerLib.Interfaces;
+using Tracker.Constants;
+using Tracker.Interfaces;
 
 namespace Tracker.Implementations
 {
