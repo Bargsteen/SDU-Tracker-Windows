@@ -14,18 +14,18 @@
     <Setting Name="Users" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;Anders&lt;/string&gt;
-  &lt;string&gt;Anders2&lt;/string&gt;
+  &lt;string&gt;Kasper&lt;/string&gt;
+  &lt;string&gt;Kasper2&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="CurrentUser" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Anders</Value>
+      <Value Profile="(Default)">Kasper</Value>
     </Setting>
     <Setting Name="TrackingType" Type="TrackerLib.Enums.TrackingType" Scope="User">
       <Value Profile="(Default)">AppAndDevice</Value>
     </Setting>
     <Setting Name="UserId" Type="System.String" Scope="User">
-      <Value Profile="(Default)">AndersId</Value>
+      <Value Profile="(Default)">Bargsteen</Value>
     </Setting>
     <Setting Name="StopTrackingDate" Type="System.DateTimeOffset" Scope="User">
       <Value Profile="(Default)">9999-12-12 +01:00</Value>

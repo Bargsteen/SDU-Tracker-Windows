@@ -23,5 +23,14 @@
         public static string ChangeUserAlertTitle(string user) => $"Er du {user}?";
 
         public static string ChangeUserAlertMessage = "Hvis ikke, så tryk nej for at skifte bruger.";
+
+        // Setup
+        public static string SetupByUriErrorTitle = "Opsætning mislykkedes";
+
+        public static string SetupByUriErrorMessage = "Prøv at åbne linket igen. Hvis det ikke virker, så kontakt SDU.";
+
+        public static string SetupByUriSuccessTitle = "Opsætning færdiggjort";
+
+        public static string SetupByUriSuccessMessage = "Der er intet mere at gøre.";
     }
 }

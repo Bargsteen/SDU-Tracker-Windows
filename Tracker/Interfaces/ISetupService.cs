@@ -1,10 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Tracker.Interfaces
 {
     public interface ISetupService
     {
-        void RegisterUriScheme();
-        void SetupAppByUri(Uri uri);
+        void SetupAppByUri(string maybeUri);
     }
 }

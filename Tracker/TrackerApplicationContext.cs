@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Tracker.Enums;
 using Tracker.Events;
 using Tracker.Interfaces;
 using Tracker.Properties;
@@ -25,7 +26,11 @@ namespace Tracker
             
             Application.ApplicationExit += OnApplicationExit;
 
-            _runner.Run();
+            var response = _runner.Run();
+            if (response == RunnerResponse.ShouldTerminate)
+            {
+                Exit(this, null);
+            }
         }
 
         private void SetupMenu()

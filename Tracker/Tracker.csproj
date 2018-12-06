@@ -199,6 +199,7 @@
       <DependentUpon>CreateUserWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Enums\EventType.cs" />
+    <Compile Include="Enums\RunnerResponse.cs" />
     <Compile Include="Enums\TrackingType.cs" />
     <Compile Include="Enums\UsageLogType.cs" />
     <Compile Include="Events\CurrentUserChangedEventArgs.cs" />

@@ -30,37 +30,38 @@ namespace Tracker.Implementations
             _settings = settings;
         }
 
-        public void Run()
+        public RunnerResponse Run()
         {
             if (!_settings.AppHasBeenSetup)
             {
                 _logger.LogInfo(LoggerConstants.AppHasNotBeenSetupText);
                 _alertService.ShowAlert(AlertConstants.ReadyForSetupTitle, AlertConstants.ReadyForSetupMessage);
+                return RunnerResponse.ShouldTerminate;
             }
-            else
-            {
-                if (_dateTimeService.CurrentTime <= _settings.StopTrackingDate)
-                {
-                    _resendService.StartPeriodicResendingOfSavedUsages(TrackingConstants.SecondsBetweenResendChecks, TrackingConstants.LimitOfEachUsage);
 
-                    if (_settings.TrackingType == TrackingType.AppAndDevice)
-                    {
-                        _appTracker.StartTracking();
-                        _deviceTracker.StartTracking();
-                    }
-                    else
-                    {
-                        _deviceTracker.StartTracking();
-                    }
+            if (_dateTimeService.CurrentTime <= _settings.StopTrackingDate)
+            {
+                _resendService.StartPeriodicResendingOfSavedUsages(TrackingConstants.SecondsBetweenResendChecks, TrackingConstants.LimitOfEachUsage);
+
+                if (_settings.TrackingType == TrackingType.AppAndDevice)
+                {
+                    _appTracker.StartTracking();
+                    _deviceTracker.StartTracking();
                 }
                 else
                 {
-                    // TODO: Launch at login should remove the shortcut
-                    _launchAtLoginService.LaunchAtLoginIsEnabled = false;
-                    _alertService.ShowAlert(AlertConstants.TrackingHasEndedTitle,
-                        AlertConstants.TrackingHasEndedMessage);
+                    _deviceTracker.StartTracking();
                 }
+
+                return RunnerResponse.SuccessfullyRunning;
             }
+
+            // TODO: Launch at login should remove the shortcut
+            _launchAtLoginService.LaunchAtLoginIsEnabled = false;
+            _alertService.ShowAlert(AlertConstants.TrackingHasEndedTitle,
+                AlertConstants.TrackingHasEndedMessage);
+
+            return RunnerResponse.ShouldTerminate;
         }
 
         public void Terminate()

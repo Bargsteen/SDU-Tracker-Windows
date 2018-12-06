@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Tracker.Constants;
 using Tracker.Enums;
 using Tracker.Implementations;
 using Tracker.Interfaces;
@@ -31,11 +30,15 @@ namespace Tracker
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                var trackerApplicationContext = Container.GetInstance<TrackerApplicationContext>();
+                if (args.Length > 0) // Should be from the setup link
+                 {
+                     var setupService = Container.GetInstance<ISetupService>();
+                     setupService.SetupAppByUri(args[0]);
+                 }
 
-                HandleArgs(args);
+                 var trackerApplicationContext = Container.GetInstance<TrackerApplicationContext>();
 
-                Application.Run(trackerApplicationContext);
+                 Application.Run(trackerApplicationContext);
             }
             catch(Exception e)
             {
@@ -44,14 +47,12 @@ namespace Tracker
             }
         }
 
-        
-
         private static Container GetContainer()
         {
             var container = new Container();
 
-            //container.Register<ISettings, Settings>(Lifestyle.Singleton);
-            container.RegisterInstance(GetSettings());
+            container.Register<ISettings, Settings>(Lifestyle.Singleton);
+            //container.RegisterInstance(GetSettings());
             container.Register<ILogger, Logger>(Lifestyle.Singleton);
             container.Register<IActiveWindowService, ActiveWindowService>();
             container.RegisterInstance(GetPersistence());
@@ -70,6 +71,7 @@ namespace Tracker
             container.Register<IResendService, ResendService>();
             container.Register<IUserWindow, UserWindow>(Lifestyle.Singleton);;
             container.Register<TrackerApplicationContext>();
+            container.Register<ISetupService, SetupService>();
 
             return container;
         }
@@ -86,29 +88,14 @@ namespace Tracker
             if (!settings.AppHasBeenSetup)
             {
                 settings.AppHasBeenSetup = true;
-                settings.Users = new List<string> { "Anders" };
-                settings.UserId = "AndersTest";
-                settings.CurrentUser = "Anders";
+                settings.Users = new List<string> { "Kasper", "Kasper2" };
+                settings.UserId = "Bargsteen";
+                settings.CurrentUser = "Kasper";
                 settings.StopTrackingDate = DateTimeOffset.MaxValue;
                 settings.TrackingType = TrackingType.AppAndDevice;
             }
 
             return settings;
-        }
-
-        private static void HandleArgs(IReadOnlyList<string> args)
-        {
-            var alertService = Container.GetInstance<IAlertService>();
-            var setupService = new SetupService();
-
-            if (args.Count <= 0) return;
-
-            if (Uri.TryCreate(args[0], UriKind.Absolute, out var uri) &&
-                string.Equals(uri.Scheme, SetupConstants.UriScheme, StringComparison.OrdinalIgnoreCase))
-            {
-                setupService.SetupAppByUri(uri);
-                alertService.ShowAlert("Opened by URL:", uri.ToString());
-            }
         }
     }
 }

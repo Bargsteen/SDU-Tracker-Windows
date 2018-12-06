@@ -1,8 +1,10 @@
-﻿namespace Tracker.Interfaces
+﻿using Tracker.Enums;
+
+namespace Tracker.Interfaces
 {
     public interface IRunner
     {
-        void Run();
+        RunnerResponse Run();
         void Terminate();
     }
 }

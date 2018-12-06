@@ -30,7 +30,7 @@ namespace TrackerTests
             _resendService.StartPeriodicResendingOfSavedUsages(secondsToSleep, limitOfEachUsage);
 
             // Assert
-            _sendOrSaveService.Verify(s => s.SendSomeUsagesFromPersistence(limitOfEachUsage), Times.Once);
+            _sendOrSaveService.Verify(s => s.SendSomeUsagesFromPersistence(limitOfEachUsage), Times.AtLeastOnce);
             _sleepService.Verify(s => s.SleepFor(secondsToSleep));
         }
     }
