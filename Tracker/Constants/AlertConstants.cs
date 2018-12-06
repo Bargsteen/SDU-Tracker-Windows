@@ -31,6 +31,6 @@
 
         public static string SetupByUriSuccessTitle = "Opsætning færdiggjort";
 
-        public static string SetupByUriSuccessMessage = "Der er intet mere at gøre.";
+        public static string SetupByUriSuccessMessage = "Opsætningen er færdiggjort. Der er intet mere at gøre.";
     }
 }

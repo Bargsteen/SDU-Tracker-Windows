@@ -86,7 +86,7 @@ namespace TrackerTests
         }
 
         [Fact]
-        public void Run__IsSetup_TrackingDateReached__ShowsAlertStopAutoLaunch()
+        public void Run__IsSetup_TrackingDateReached__ShowsAlert_StopAutoLaunch()
         {
             // Arrange
             _settings.Setup(s => s.AppHasBeenSetup).Returns(true);

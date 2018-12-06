@@ -12,6 +12,7 @@ namespace Tracker
         private readonly IRunner _runner;
         private readonly ISettings _settings;
         private readonly IUserService _userService;
+
         private NotifyIcon _trayIcon;
 
         public TrackerApplicationContext(IRunner runner, ISettings settings, IUserService userService)
@@ -41,8 +42,7 @@ namespace Tracker
 
                 ContextMenu = new ContextMenu(new[]
                 {
-                    new MenuItem(MakeCurrentUserString(_settings.CurrentUser), OpenUserMenuClicked),
-                    new MenuItem("Afslut", Exit)
+                    new MenuItem(MakeCurrentUserString(_settings.CurrentUser), OpenUserMenuClicked)
                 }),
                 Visible = true
             };

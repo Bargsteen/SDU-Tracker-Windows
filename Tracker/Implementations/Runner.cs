@@ -56,7 +56,6 @@ namespace Tracker.Implementations
                 return RunnerResponse.SuccessfullyRunning;
             }
 
-            // TODO: Launch at login should remove the shortcut
             _launchAtLoginService.LaunchAtLoginIsEnabled = false;
             _alertService.ShowAlert(AlertConstants.TrackingHasEndedTitle,
                 AlertConstants.TrackingHasEndedMessage);

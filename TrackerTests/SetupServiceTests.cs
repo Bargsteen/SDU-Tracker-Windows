@@ -11,6 +11,7 @@ namespace TrackerTests
     public class SetupServiceTests
     {
         private readonly Mock<IAlertService> _alertServiceMock;
+        private readonly Mock<ILaunchAtLoginService> _launchAtLoginServiceMock;
         private readonly Mock<ISettings> _settingsMock;
 
         private readonly ISetupService _setupService;
@@ -19,8 +20,9 @@ namespace TrackerTests
         {
             _alertServiceMock = new Mock<IAlertService>();
             var dateTimeServiceMock = new Mock<IDateTimeService>();
+            _launchAtLoginServiceMock = new Mock<ILaunchAtLoginService>();
             _settingsMock = new Mock<ISettings>();
-            _setupService = new SetupService(_alertServiceMock.Object, dateTimeServiceMock.Object, _settingsMock.Object);
+            _setupService = new SetupService(_alertServiceMock.Object, dateTimeServiceMock.Object, _launchAtLoginServiceMock.Object, _settingsMock.Object);
         }
 
         [Fact]
@@ -40,7 +42,7 @@ namespace TrackerTests
         [Theory]
         [InlineData("sdutracker://?data=eyAidXNlcl9pZCI6ICJUZXN0SWQiLCAidXNlcnMiOiAiW1Rlc3QxLCBUZXN0Ml0iLCAidHJhY2tpbmdfdHlwZSI6ICIxIiwgIm1lYXN1cmVtZW50X2RheXMiOiAiMzAiIH0=", "TestId", 30, "Test1", "Test2")]
         [InlineData("sdutracker://?data=eyAidXNlcl9pZCI6ICJUZXN0MklkIiwgInVzZXJzIjogIltUZXN0VXNlcl0iLCAidHJhY2tpbmdfdHlwZSI6ICIwIiwgIm1lYXN1cmVtZW50X2RheXMiOiAiMSIgfQ==", "Test2Id", 1, "TestUser")]
-        public void SetupAppByUri__ValidUri__ChangesSettingsAndShowsSuccessAlert(string uri, string userId, int measurementDays, params string[] users)
+        public void SetupAppByUri__ValidUri__ChangesSettings_EnablesAutomaticStartup_ShowsSuccessAlert(string uri, string userId, int measurementDays, params string[] users)
         {
             // Arrange
             _settingsMock.SetupAllProperties();
@@ -51,14 +53,16 @@ namespace TrackerTests
             _setupService.SetupAppByUri(uri);
 
             // Assert
-            VerifyFailedAlertShown(Times.Never());
-            VerifySuccessAlertShown(Times.Once());
-
             _settingsMock.VerifySet(s => s.CurrentUser = users[0]);
             _settingsMock.VerifySet(s => s.AppHasBeenSetup = true);
             _settingsMock.VerifySet(s => s.StopTrackingDate = testDate.AddDays(measurementDays));
             _settingsMock.VerifySet(s => s.UserId = userId);
             _settingsMock.VerifySet(s => s.Users = users.ToList());
+
+            _launchAtLoginServiceMock.VerifySet(l => l.LaunchAtLoginIsEnabled = true);
+
+            VerifyFailedAlertShown(Times.Never());
+            VerifySuccessAlertShown(Times.Once());
         }
 
         private void VerifyFailedAlertShown(Times times)

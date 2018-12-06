@@ -14,12 +14,14 @@ namespace Tracker.Implementations
     {
         private readonly IAlertService _alertService;
         private readonly IDateTimeService _dateTimeService;
+        private readonly ILaunchAtLoginService _launchAtLoginService;
         private readonly ISettings _settings;
         
-        public SetupService(IAlertService alertService, IDateTimeService dateTimeService, ISettings settings)
+        public SetupService(IAlertService alertService, IDateTimeService dateTimeService, ILaunchAtLoginService launchAtLoginService, ISettings settings)
         {
             _alertService = alertService;
             _dateTimeService = dateTimeService;
+            _launchAtLoginService = launchAtLoginService;
             _settings = settings;
         }
 
@@ -54,10 +56,10 @@ namespace Tracker.Implementations
 
                         // Success => Prompt user with alert
                         _settings.AppHasBeenSetup = true;
+                        _launchAtLoginService.LaunchAtLoginIsEnabled = true;
                         _alertService.ShowAlert(AlertConstants.SetupByUriSuccessTitle, AlertConstants.SetupByUriSuccessMessage);
-
                     }
-                    catch (Exception) // TODO: This could be handled better.
+                    catch (Exception) // TODO: This could be handled without exceptions.
                     {
                         _alertService.ShowAlert(AlertConstants.SetupByUriErrorTitle, AlertConstants.SetupByUriErrorMessage);
                     }
@@ -75,31 +77,6 @@ namespace Tracker.Implementations
                 .Split(new[] {'[', ']', ','}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.Trim())
                 .ToList();
-        }
-
-        public void RegisterUriScheme()
-        {
-            const string friendlyName = "SDU Tracker";
-
-            using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + SetupConstants.UriScheme))
-            {
-                string applicationLocation = typeof(Program).Assembly.Location;
-
-                key?.SetValue("", "URL:" + friendlyName);
-                key?.SetValue("URL Protocol", "");
-
-
-                using (var defaultIcon = key?.CreateSubKey("DefaultIcon"))
-                {
-                    defaultIcon?.SetValue("", "Tracker.exe" + ",1");
-                }
-
-                using (var commandKey = key?.CreateSubKey(@"shell\open\command"))
-                {
-                    commandKey?.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
-                }
-
-            }
         }
     }
 }
