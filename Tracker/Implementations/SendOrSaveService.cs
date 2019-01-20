@@ -48,7 +48,12 @@ namespace Tracker.Implementations
             }
 
             _requests.SendUsageAsync(usage, _credentials, onSuccess, onError);
+        }
 
+        public void SaveUsage<T>(T usage) where T : Usage
+        {
+            _persistence.Save(usage);
+            _logger.LogUsage(usage, UsageLogType.Saved);
         }
 
         public void SendSomeUsagesFromPersistence(int limitOfEach = 10)

@@ -49,13 +49,16 @@ namespace Tracker.Implementations
 
             // Send final
             var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Ended);
-            _sendOrSaveService.SendOrSaveUsage(deviceUsage);
+            _sendOrSaveService.SaveUsage(deviceUsage);
         }
 
         private void HandleSystemSuspended(object sender, EventArgs e)
         {
+            
             var deviceUsage = _usageBuilder.MakeDeviceUsage(EventType.Ended);
-            _sendOrSaveService.SendOrSaveUsage(deviceUsage);
+
+            // Save directly, as there won't be time for a network request
+            _sendOrSaveService.SaveUsage(deviceUsage);
         }
 
         private void HandleSystemResumed(object sender, EventArgs e)

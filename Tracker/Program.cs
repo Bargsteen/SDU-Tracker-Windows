@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
-using log4net.Config;
 using Tracker.Enums;
 using Tracker.Implementations;
 using Tracker.Interfaces;

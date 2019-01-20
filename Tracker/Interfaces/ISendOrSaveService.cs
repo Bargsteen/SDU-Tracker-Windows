@@ -8,5 +8,7 @@ namespace Tracker.Interfaces
             where T : Usage;
 
         void SendSomeUsagesFromPersistence(int limitOfEach = 10);
+
+        void SaveUsage<T>(T usage) where T : Usage;
     }
 }
