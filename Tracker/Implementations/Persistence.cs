@@ -15,9 +15,15 @@ namespace Tracker.Implementations
 
         public Persistence()
         {
-            string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Tracker",
-                "sdu-tracker.db");
-            _options = new DbContextOptionsBuilder<UsageContext>().UseSqlite($"DataSource = {dbPath}").Options;
+            string dbDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "SDU", "Tracker");
+
+            // Ensure that the directories are created, since EF can't handle that.
+            Directory.CreateDirectory(dbDirectoryPath);
+
+            string dbFilePath = Path.Combine(dbDirectoryPath, "sdu-tracker.db");
+            
+            _options = new DbContextOptionsBuilder<UsageContext>().UseSqlite($"DataSource = {dbFilePath}").Options;
 
             EnsureDatabaseIsCreated();
         }
