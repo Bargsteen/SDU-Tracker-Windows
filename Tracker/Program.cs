@@ -1,6 +1,7 @@
 ﻿using SimpleInjector;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using Tracker.Enums;
 using Tracker.Implementations;
@@ -18,29 +19,36 @@ namespace Tracker
             Container = GetContainer();
         }
 
-      
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         private static void Main(string[] args)
         {
+            
             try
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
+                using (new Mutex(true, "SDUTracker_SingleInstance_Mutex", out bool gotMutex))
+                {
+                    // Use mutex to ensure only a single application instance is running
+                    if (!gotMutex) return;
 
-                if (args.Length > 0) // Should be from the setup link
-                 {
-                     var setupService = Container.GetInstance<ISetupService>();
-                     setupService.SetupAppByUri(args[0]);
-                 }
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
 
-                 var trackerApplicationContext = Container.GetInstance<TrackerApplicationContext>();
+                    if (args.Length > 0) // Should be from the setup link
+                    {
+                        var setupService = Container.GetInstance<ISetupService>();
+                        setupService.SetupAppByUri(args[0]);
+                    }
 
-                 Application.Run(trackerApplicationContext);
+                    var trackerApplicationContext = Container.GetInstance<TrackerApplicationContext>();
+                    Application.Run(trackerApplicationContext);
+                }
+                    
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 var logger = Container.GetInstance<ILogger>();
                 logger.LogError(e.Message);
@@ -69,7 +77,7 @@ namespace Tracker
             container.Register<ILaunchAtLoginService, LaunchAtLoginService>();
             container.Register<IUserService, UserService>(Lifestyle.Singleton);
             container.Register<IResendService, ResendService>();
-            container.Register<IUserWindow, UserWindow>(Lifestyle.Singleton);;
+            container.Register<IUserWindow, UserWindow>(Lifestyle.Singleton); ;
             container.Register<TrackerApplicationContext>();
             container.Register<ISetupService, SetupService>();
 
@@ -88,9 +96,9 @@ namespace Tracker
             if (!settings.AppHasBeenSetup)
             {
                 settings.AppHasBeenSetup = true;
-                settings.Users = new List<string> { "Kasper", "Kasper2" };
-                settings.UserId = "Bargsteen";
-                settings.CurrentUser = "Kasper";
+                settings.Users = new List<string> { "Test1", "Test2" };
+                settings.UserId = "TestId";
+                settings.CurrentUser = "Test1";
                 settings.StopTrackingDate = DateTimeOffset.MaxValue;
                 settings.TrackingType = TrackingType.AppAndDevice;
             }
