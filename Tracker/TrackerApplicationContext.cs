@@ -53,11 +53,9 @@ namespace Tracker
             _userService.ShowUserWindow();
         }
 
-        private void Exit(object sender, EventArgs e)
+        private static void Exit(object sender, EventArgs e)
         {
-            _trayIcon.Visible = false;
-
-            Application.Exit();
+            Environment.Exit(0);
         }
 
         // TODO: Does not seem to be executed when computer shuts down. Not a problem in terms of saving the usages, though.
