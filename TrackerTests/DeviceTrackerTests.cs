@@ -95,7 +95,7 @@ namespace TrackerTests
         }
 
         [Fact]
-        public void StartTracking__ComputerSleeps__SendsDeviceUsage()
+        public void StartTracking__ComputerSleeps__SavesDeviceUsage()
         {
             // Arrange
             _deviceTracker.StartTracking();
@@ -104,7 +104,7 @@ namespace TrackerTests
             RaiseSystemSuspendedEvent();
 
             // Assert
-            VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Once());
+            VerifyDeviceUsageSavedXTimes(Times.Once());
         }
 
 
@@ -155,7 +155,7 @@ namespace TrackerTests
         }
 
         [Fact]
-        public void StopTracking__WasStarted__SendsDeviceEnded()
+        public void StopTracking__WasStarted__SavesDeviceEnded()
         {
             // Arrange
             _deviceTracker.StartTracking();
@@ -164,7 +164,7 @@ namespace TrackerTests
             _deviceTracker.StopTracking();
 
             // Assert
-            VerifyDeviceUsageSentXTimes(EventType.Ended, Times.Once());
+            VerifyDeviceUsageSavedXTimes(Times.Once());
         }
 
 
@@ -186,6 +186,12 @@ namespace TrackerTests
         {
             _sendOrSaveService.Verify(s =>
                 s.SendOrSaveUsage(It.Is<DeviceUsage>(u => u.EventType == eventType.GetHashCode()), false), times);
+        }
+
+        private void VerifyDeviceUsageSavedXTimes(Times times)
+        {
+            _sendOrSaveService.Verify(s =>
+                s.SaveUsage(It.Is<DeviceUsage>(u => u.EventType == EventType.Ended.GetHashCode())), times);
         }
 
         private void VerifyCheckIfUserHasChanged(Times times)

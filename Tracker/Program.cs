@@ -98,15 +98,15 @@ namespace Tracker
         {
             var settings = new Settings();
 
-            if (!settings.AppHasBeenSetup)
-            {
-                settings.AppHasBeenSetup = true;
-                settings.Users = new List<string> { "Test1", "Test2" };
-                settings.UserId = "TestId";
-                settings.CurrentUser = "Test1";
-                settings.StopTrackingDate = DateTimeOffset.MaxValue;
-                settings.TrackingType = TrackingType.AppAndDevice;
-            }
+            //if (!settings.AppHasBeenSetup)
+            //{
+            //    settings.AppHasBeenSetup = true;
+            //    settings.Users = new List<string> { "Test1", "Test2" };
+            //    settings.UserId = "TestId";
+            //    settings.CurrentUser = "Test1";
+            //    settings.StopTrackingDate = DateTimeOffset.MaxValue;
+            //    settings.TrackingType = TrackingType.AppAndDevice;
+            //}
 
             return settings;
         }
