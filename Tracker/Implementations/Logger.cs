@@ -16,7 +16,12 @@ namespace Tracker.Implementations
         {
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo("log4net.config"));
+
+            // When Tracker is run as a service, its working dir is system32.
+            // So we need to provide the absolute path to the config file
+            var configFilePath = $"{AppDomain.CurrentDomain.BaseDirectory}log4net.config";
+
+            XmlConfigurator.ConfigureAndWatch(logRepository, new FileInfo(configFilePath));
         }
 
         public void LogInfo(string msg) => _log.Info(msg);

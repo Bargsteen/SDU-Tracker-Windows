@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
+using log4net.Config;
 using Tracker.Enums;
 using Tracker.Implementations;
 using Tracker.Interfaces;
@@ -26,13 +27,18 @@ namespace Tracker
         [STAThread]
         private static void Main(string[] args)
         {
-            
+            var logger = Container.GetInstance<ILogger>();
+
             try
             {
-                using (new Mutex(true, "SDUTracker_SingleInstance_Mutex", out bool gotMutex))
+                using (new Mutex(true, "SDUTrackerSingleInstanceMutex", out bool gotMutex))
                 {
                     // Use mutex to ensure only a single application instance is running
-                    if (!gotMutex) return;
+                    if (!gotMutex)
+                    {
+                        logger.LogInfo("Could not get mutex. Another instance is probably running. Terminating..");
+                        return;
+                    }
 
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
@@ -50,7 +56,7 @@ namespace Tracker
             }
             catch (Exception e)
             {
-                var logger = Container.GetInstance<ILogger>();
+               
                 logger.LogError(e.Message);
             }
         }
