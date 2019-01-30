@@ -63,7 +63,7 @@ namespace Tracker.Implementations
         {
             string identifier = $"{processName}";
 
-            string cleanedWindowName = windowName.Split(new[] {"?-", "-"}, StringSplitOptions.RemoveEmptyEntries)
+            string cleanedWindowName = windowName.Split(new[] {"?-", "-", "–" }, StringSplitOptions.RemoveEmptyEntries)
                 .LastOrDefault()?
                 .Trim();
 
