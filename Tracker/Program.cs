@@ -85,6 +85,7 @@ namespace Tracker
             container.Register<IUserWindow, UserWindow>(Lifestyle.Singleton); ;
             container.Register<TrackerApplicationContext>();
             container.Register<ISetupService, SetupService>();
+            container.Register<IPowerSettingsService, PowerSettingsService>();
 
             return container;
         }

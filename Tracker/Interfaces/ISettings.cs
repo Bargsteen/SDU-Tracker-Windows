@@ -25,5 +25,7 @@ namespace Tracker.Interfaces
         string ParticipantIdentifier { get;}
 
         Credentials Credentials { get;}
+
+        int PowerSettingsSleepAfterMinutes { get; }
     }
 }

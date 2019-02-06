@@ -21,10 +21,11 @@ namespace TrackerTests
             _logger = new Mock<ILogger>();
             _settings = new Mock<ISettings>();
             _resendService = new Mock<IResendService>();
+            _powerSettingsServiceMock = new Mock<IPowerSettingsService>();
 
             _runner = new Runner(_alertService.Object, _appTracker.Object, _dateTimeService.Object,
                 _deviceTracker.Object, _launchAtLoginService.Object, _logger.Object, 
-                _resendService.Object, _settings.Object);
+                _resendService.Object, _settings.Object, _powerSettingsServiceMock.Object);
         }
 
         private readonly IRunner _runner;
@@ -37,6 +38,7 @@ namespace TrackerTests
         private readonly Mock<ILogger> _logger;
         private readonly Mock<ISettings> _settings;
         private readonly Mock<IResendService> _resendService;
+        private readonly Mock<IPowerSettingsService> _powerSettingsServiceMock;
 
         [Fact]
         public void Run__IsSetup_TrackingDateNotReached_AppAndDeviceTracking__StartsTrackingBoth()
@@ -83,6 +85,21 @@ namespace TrackerTests
 
             // Assert
             _resendService.Verify(r => r.StartPeriodicResendingOfSavedUsages(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+        }
+
+        [Fact]
+        public void Run__IsSetup_TrackingDateNotReached__ChangesPowerSettings()
+        {
+            // Arrange
+            _settings.Setup(s => s.AppHasBeenSetup).Returns(true);
+            _settings.Setup(s => s.StopTrackingDate).Returns(DateTimeOffset.MaxValue);
+            _settings.Setup(s => s.TrackingType).Returns(TrackingType.AppAndDevice);
+
+            // Act
+            _runner.Run();
+
+            // Assert
+            _powerSettingsServiceMock.Verify(p => p.SetSleepAfterTimer(It.IsAny<int>()), Times.Once());
         }
 
         [Fact]

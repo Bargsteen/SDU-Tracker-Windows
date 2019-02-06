@@ -14,11 +14,12 @@ namespace Tracker.Implementations
         private readonly ILogger _logger;
         private readonly IResendService _resendService;
         private readonly ISettings _settings;
+        private readonly IPowerSettingsService _powerSettingsService;
 
 
         public Runner(IAlertService alertService, IAppTracker appTracker, IDateTimeService dateTimeService, 
             IDeviceTracker deviceTracker, ILaunchAtLoginService launchAtLoginService, ILogger logger, 
-            IResendService resendService, ISettings settings)
+            IResendService resendService, ISettings settings, IPowerSettingsService powerSettingsService)
         {
             _alertService = alertService;
             _appTracker = appTracker;
@@ -28,6 +29,7 @@ namespace Tracker.Implementations
             _logger = logger;
             _resendService = resendService;
             _settings = settings;
+            _powerSettingsService = powerSettingsService;
         }
 
         public RunnerResponse Run()
@@ -42,6 +44,8 @@ namespace Tracker.Implementations
             if (_dateTimeService.CurrentTime <= _settings.StopTrackingDate)
             {
                 _resendService.StartPeriodicResendingOfSavedUsages(TrackingConstants.SecondsBetweenResendChecks, TrackingConstants.LimitOfEachUsage);
+
+                _powerSettingsService.SetSleepAfterTimer(_settings.PowerSettingsSleepAfterMinutes);
 
                 if (_settings.TrackingType == TrackingType.AppAndDevice)
                 {

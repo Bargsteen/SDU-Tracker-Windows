@@ -240,6 +240,7 @@
     <Compile Include="Implementations\Extensions.cs" />
     <Compile Include="Implementations\Logger.cs" />
     <Compile Include="Implementations\Persistence.cs" />
+    <Compile Include="Implementations\PowerSettingsService.cs" />
     <Compile Include="Implementations\Requests.cs" />
     <Compile Include="Implementations\ResendService.cs" />
     <Compile Include="Implementations\Runner.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Interfaces\ILaunchAtLoginService.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IPersistence.cs" />
+    <Compile Include="Interfaces\IPowerSettingsService.cs" />
     <Compile Include="Interfaces\IRequests.cs" />
     <Compile Include="Interfaces\IResendService.cs" />
     <Compile Include="Interfaces\IRunner.cs" />

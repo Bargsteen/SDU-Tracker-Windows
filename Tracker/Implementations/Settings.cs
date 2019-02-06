@@ -84,5 +84,7 @@ namespace Tracker.Implementations
         public string ParticipantIdentifier => MakeParticipantIdentifierForUser(CurrentUser);
 
         public Credentials Credentials => new Credentials(_settings.Username, _settings.Password);
+
+        public int PowerSettingsSleepAfterMinutes => _settings.PowerSettingsSleepAfterMinutes;
     }
 }
