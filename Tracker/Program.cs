@@ -64,8 +64,8 @@ namespace Tracker
         {
             var container = new Container();
 
-            //container.Register<ISettings, Settings>(Lifestyle.Singleton);
-            container.RegisterInstance(GetSettings());
+            container.Register<ISettings, Settings>(Lifestyle.Singleton);
+            //container.RegisterInstance(GetSettings());
             container.Register<ILogger, Logger>(Lifestyle.Singleton);
             container.Register<IActiveWindowService, ActiveWindowService>();
             container.RegisterInstance(GetPersistence());
