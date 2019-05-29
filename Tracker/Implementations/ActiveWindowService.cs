@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Tracker.Interfaces;
 using Tracker.Models;
@@ -53,25 +52,7 @@ namespace Tracker.Implementations
 
         private static string GetIdentifier(Process process)
         {
-            string processName = process.ProcessName;
-            string windowName = process.MainWindowTitle; // TODO: Remove too specific info from title
-
-            return MakeIdentifier(processName, windowName);
-        }
-
-        private static string MakeIdentifier(string processName, string windowName)
-        {
-            string identifier = $"{processName}";
-
-            string cleanedWindowName = windowName.Split(new[] {"?-", "-", "–" }, StringSplitOptions.RemoveEmptyEntries)
-                .LastOrDefault()?
-                .Trim();
-
-            if (!string.IsNullOrEmpty(cleanedWindowName))
-            {
-                identifier += $" - {cleanedWindowName}";
-            }
-            return identifier;
+            return process.ProcessName;
         }
 
         [DllImport("user32.dll")]
