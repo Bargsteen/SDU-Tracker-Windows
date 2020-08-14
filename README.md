@@ -12,6 +12,7 @@ It has the following features:
       - The researchers send out invite links to the participants, which sets up their ID, type of tracking, and termination date in ActivityTracker
       - [The links are generated with this webapp](https://github.com/Bargsteen/SDU-Tracker-Setup)
    - Automatically terminates tracking at a given date
+   - [A version for MacOS also exists](https://github.com/Bargsteen/SDU-Tracker)
 
 ## Notes
 
