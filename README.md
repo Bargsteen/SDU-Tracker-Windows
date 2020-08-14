@@ -1,7 +1,7 @@
 # SDU Tracker Windows
 Initially created by Kasper Dissing Bargsteen - kasper@bargsteen.com for the Health department at SDU.
 
-ActivityTracker tracks the computer usage of participants in a [IT-health research study by Syddansk University](https://www.researchgate.net/publication/340106467_Short-term_efficacy_of_reducing_screen_media_use_on_physical_activity_sleep_and_physiological_stress_in_families_with_children_aged_4-14_study_protocol_for_the_SCREENS_randomized_controlled_trial).
+SDU Tracker tracks the computer usage of participants in a [IT-health research study by Syddansk University](https://www.researchgate.net/publication/340106467_Short-term_efficacy_of_reducing_screen_media_use_on_physical_activity_sleep_and_physiological_stress_in_families_with_children_aged_4-14_study_protocol_for_the_SCREENS_randomized_controlled_trial).
 
 It has the following features:
    - Tracking of user sessions, i.e. when a user starts or ends work fx by logging in or out
@@ -9,7 +9,7 @@ It has the following features:
    - Uploads all logged data to a SDU database
    - Handles and differentiates between multiple users per computer (even with just one system user)
    - Can be setup using a link or QR-code, which also determines the date for automatic termination
-      - The researchers send out invite links to the participants, which sets up their ID, type of tracking, and termination date in ActivityTracker
+      - The researchers send out invite links to the participants, which sets up their ID, type of tracking, and termination date in SDU Tracker
       - [The links are generated with this webapp](https://github.com/Bargsteen/SDU-Tracker-Setup)
    - Automatically terminates tracking at a given date
    - [A version for MacOS also exists](https://github.com/Bargsteen/SDU-Tracker)
