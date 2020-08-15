@@ -16,6 +16,11 @@ It has the following features:
 
 ## Notes
 
+### Removal of Secrets
+The username and password for the database have been replaced with '\*\*\*REMOVED\*\*\*' everywhere, including previous commits, by using [BFG](https://rtyley.github.io/bfg-repo-cleaner/).
+A git-safe way of handling secrets should be implemented.
+A temporary fix to make the app functional is to reinsert the secrets.
+
 ### Building the installers
 - Set the build type to `Release`
 - Build the project
